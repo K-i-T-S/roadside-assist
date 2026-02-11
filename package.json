@@ -1,7 +1,11 @@
 {
-  "name": "roadside-assist",
+  "name": "kits-roadside-assistance",
   "version": "0.1.0",
   "private": true,
+  "description": "KiTS Roadside Assistance - 24/7 emergency help in Lebanon",
+  "keywords": ["roadside", "assistance", "towing", "lebanon", "emergency", "kits"],
+  "author": "KiTS Hub",
+  "homepage": "https://roadside.kitshub.vercel.app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
