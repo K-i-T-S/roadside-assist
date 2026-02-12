@@ -18,7 +18,7 @@ const serviceOptions: { type: ServiceType; label: string; icon: React.ReactNode;
 
 export default function Home() {
   const [selectedService, setSelectedService] = useState<ServiceType | null>(null)
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState('+961 ')
   const [locationLink, setLocationLink] = useState('')
   const [notes, setNotes] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -33,9 +33,10 @@ export default function Home() {
   const [isMapLoading, setIsMapLoading] = useState(false)
   const [mapUrl, setMapUrl] = useState('') // Separate state for map URL
   const [mapProvider, setMapProvider] = useState<'google' | 'osm'>('google') // Track which provider is being used
+  const [isClient, setIsClient] = useState(false) // To prevent hydration mismatch
 
   const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^\+961\s?\d{2}\s?\d{3}\s?\d{3}$/
+    const phoneRegex = /^\+\d{1,4}\d{6,12}$/
     return phoneRegex.test(phone.replace(/\s/g, ''))
   }
 
@@ -45,6 +46,28 @@ export default function Home() {
       return url.includes('maps.google.com') || url.includes('goo.gl/maps')
     } catch {
       return false
+    }
+  }
+
+  const parseGoogleMapsUrl = (url: string): { lat: number; lng: number; zoom?: number } | null => {
+    try {
+      const urlObj = new URL(url)
+      const q = urlObj.searchParams.get('q')
+      if (!q) return null
+      
+      // Handle coordinates like "33.8938,35.5018" or "33.8938, 35.5018"
+      const coords = q.split(',').map(coord => parseFloat(coord.trim()))
+      if (coords.length !== 2 || coords.some(isNaN)) return null
+      
+      const [lat, lng] = coords
+      if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null
+      
+      const zoom = urlObj.searchParams.get('z')
+      const zoomLevel = zoom ? parseInt(zoom, 10) : 16
+      
+      return { lat, lng, zoom: zoomLevel }
+    } catch {
+      return null
     }
   }
 
@@ -60,6 +83,32 @@ export default function Home() {
       setLocationPermission('unsupported')
     }
   }, [])
+
+  // Set isClient to true after mount
+  React.useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // Parse locationLink when it changes
+  React.useEffect(() => {
+    if (locationLink && validateUrl(locationLink)) {
+      const parsed = parseGoogleMapsUrl(locationLink)
+      if (parsed) {
+        // Check if this URL already matches the current map state to avoid loops
+        const currentGoogleUrl = mapCenter 
+          ? `https://maps.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&z=${mapZoom}`
+          : null
+        
+        if (currentGoogleUrl !== locationLink) {
+          setMapCenter({ lat: parsed.lat, lng: parsed.lng })
+          setMapZoom(parsed.zoom || 16)
+          setMapUrl(`https://www.google.com/maps?q=${parsed.lat},${parsed.lng}&z=${parsed.zoom || 16}`)
+          setMapProvider('google')
+          setIsMapLoading(false)
+        }
+      }
+    }
+  }, [locationLink, mapCenter, mapZoom])
 
   const getCurrentLocation = async (): Promise<void> => {
     // Check if geolocation is supported
@@ -279,7 +328,7 @@ export default function Home() {
   const updateLocationFromMap = (lat: number, lng: number, zoom?: number): void => {
     const newZoom = zoom || mapZoom
     const googleUrl = `https://www.google.com/maps?q=${lat},${lng}&z=${newZoom}`
-    const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01},${lat - 0.01},${lng + 0.01},${lat + 0.01}&layer=mapnik&marker=${lat},${lng}`
+    const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.05},${lat - 0.05},${lng + 0.05},${lat + 0.05}&layer=mapnik&marker=${lat},${lng}`
     
     // Update all states atomically
     setLocationLink(googleUrl)
@@ -372,7 +421,7 @@ export default function Home() {
     }
     
     if (!validatePhone(phone)) {
-      setError('Please enter a valid Lebanese phone number (+961 XX XXX XXX)')
+      setError('Please enter a valid international phone number (+Country Code Number)')
       return
     }
     
@@ -414,12 +463,12 @@ export default function Home() {
       <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
           <div className="flex flex-col items-center mb-6">
-            <img 
+            <Image 
               src="/kits-logo.png" 
               alt="KiTS Roadside Assistance Logo" 
-              className="h-16 w-auto mb-4"
-              width="64"
-              height="64"
+              className="h-16 w-16 mb-4"
+              width={64}
+              height={64}
             />
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
               <CheckCircle2 className="w-8 h-8 text-green-600" aria-hidden="true" />
@@ -430,7 +479,7 @@ export default function Home() {
           
           <div className="space-y-4">
             <a
-              href={`https://wa.me/96176623030?text=Roadside assistance request: ${selectedService}`}
+              href={`https://wa.me/96181290662?text=Roadside assistance request: ${selectedService}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-green-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
@@ -441,7 +490,7 @@ export default function Home() {
             </a>
             
             <a
-              href="tel:+96176623030"
+              href="tel:+96181290662"
               className="w-full bg-blue-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
               aria-label="Call us now"
             >
@@ -453,7 +502,7 @@ export default function Home() {
               onClick={() => {
                 setSubmitted(false)
                 setSelectedService(null)
-                setPhone('')
+                setPhone('+961 ')
                 setLocationLink('')
                 setNotes('')
                 setError(null)
@@ -485,7 +534,7 @@ export default function Home() {
                   <Image 
                     src="/kits-logo.png" 
                     alt="KiTS Roadside Assistance Logo" 
-                    className="h-12 w-auto transition-transform duration-300 group-hover:scale-110"
+                    className="h-12 w-12 transition-transform duration-300 group-hover:scale-110"
                     width={48}
                     height={48}
                   />
@@ -593,16 +642,16 @@ export default function Home() {
               </div>
               <div className="hidden sm:flex items-center gap-4 text-sm">
                 <a 
-                  href="tel:+96176623030" 
+                  href="tel:+96181290662" 
                   className="flex items-center gap-2 text-white hover:text-blue-200 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                   </svg>
-                  <span className="font-semibold">+961 76 62 30 30</span>
+                  <span className="font-semibold">+961 81 29 06 62</span>
                 </a>
                 <a 
-                  href="https://wa.me/+96176623030" 
+                  href="https://wa.me/+96181290662" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-green-400 hover:text-green-300 transition-colors"
@@ -619,7 +668,7 @@ export default function Home() {
               <button 
                 onClick={() => {
                   // Direct emergency contact
-                  window.location.href = 'tel:+96176623030'
+                  window.location.href = 'tel:+96181290662'
                 }}
                 className="px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 hover:shadow-lg hover:scale-105 hover:shadow-green-500/25 flex items-center gap-2 text-sm lg:text-base lg:px-6"
               >
@@ -799,28 +848,28 @@ export default function Home() {
                       value={locationLink}
                       onChange={(e) => setLocationLink(e.target.value)}
                       className="w-full pl-10 pr-24 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800 text-black transition-all duration-200"
-                      placeholder="https://maps.google.com/..."
+                      placeholder="Share your Google Maps location link"
                       required
                       aria-describedby="location-help"
                       aria-invalid={error?.includes('location') ? 'true' : 'false'}
                     />
                     <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
-                      {locationLink && (
+                      {isClient && locationLink && (
                         <button
                           type="button"
                           onClick={openLocationInMaps}
-                          className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-2 bg-white text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                           aria-label="View location in maps"
                           title="View location in maps"
                         >
                           <MapPin className="w-4 h-4" />
                         </button>
                       )}
-                      {locationLink && (
+                      {isClient && locationLink && (
                         <button
                           type="button"
                           onClick={toggleMinimap}
-                          className="p-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"
+                          className="p-2 bg-white text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"
                           aria-label="Toggle minimap"
                           title="Show minimap"
                         >
@@ -830,32 +879,34 @@ export default function Home() {
                           </svg>
                         </button>
                       )}
-                      {locationAccuracy && locationAccuracy > 50 && (
+                      {isClient && locationAccuracy && locationAccuracy > 50 && (
                         <button
                           type="button"
                           onClick={getCurrentLocation}
                           disabled={isLocating}
-                          className="p-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors"
+                          className="p-2 bg-white text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors"
                           aria-label="Retry for better accuracy"
                           title="Retry for better accuracy"
                         >
                           <LocateIcon className="w-4 h-4" />
                         </button>
                       )}
-                      <button
-                        type="button"
-                        onClick={getCurrentLocation}
-                        disabled={isLocating || locationPermission === 'denied' || locationPermission === 'unsupported'}
-                        className="p-2 bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-1"
-                        aria-label={isLocating ? 'Getting location...' : 'Get current location'}
-                        title={locationPermission === 'denied' ? 'Location access denied' : locationPermission === 'unsupported' ? 'Geolocation not supported' : 'Get current location'}
-                      >
-                        {isLocating ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <LocateIcon className="w-4 h-4" />
-                        )}
-                      </button>
+                      {isClient && (
+                        <button
+                          type="button"
+                          onClick={getCurrentLocation}
+                          disabled={isLocating || locationPermission === 'denied' || locationPermission === 'unsupported'}
+                          className="p-2 bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-1"
+                          aria-label={isLocating ? 'Getting location...' : 'Get current location'}
+                          title={locationPermission === 'denied' ? 'Location access denied' : locationPermission === 'unsupported' ? 'Geolocation not supported' : 'Get current location'}
+                        >
+                          {isLocating ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <LocateIcon className="w-4 h-4" />
+                          )}
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="mt-2 space-y-1">
@@ -893,7 +944,7 @@ export default function Home() {
                 </div>
 
                 {/* Professional Map Interface */}
-                {showMinimap && mapCenter && (
+                {isClient && showMinimap && mapCenter && (
                   <div className="mt-6 p-6 bg-white rounded-2xl border border-gray-200 shadow-xl">
                     {/* Header */}
                     <div className="flex items-center justify-between mb-4">
@@ -1251,11 +1302,11 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
               <div className="space-y-3">
                 <a 
-                  href="tel:+96176623030" 
+                  href="tel:+96181290662" 
                   className="block text-blue-400 hover:text-blue-300 transition-colors"
-                  aria-label="Call us at +961 76 62 30 30"
+                  aria-label="Call us at +961 81 29 06 62"
                 >
-                  📞 +961 76 62 30 30
+                  📞 +961 81 29 06 62
                 </a>
                 <a 
                   href="mailto:kits.tech.co@gmail.com" 
@@ -1265,13 +1316,13 @@ export default function Home() {
                   📧 kits.tech.co@gmail.com
                 </a>
                 <a 
-                  href="https://wa.me/+96176623030" 
+                  href="https://wa.me/+96181290662" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="block text-green-400 hover:text-green-300 transition-colors"
                   aria-label="Contact us on WhatsApp"
                 >
-                  💬 WhatsApp: +961 76 62 30 30
+                  💬 WhatsApp: +961 81 29 06 62
                 </a>
               </div>
             </div>

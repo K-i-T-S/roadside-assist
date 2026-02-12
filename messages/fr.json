@@ -88,9 +88,9 @@
         "error": "Veuillez sélectionner un type de service"
       },
       "phone": {
-        "label": "Numéro de Téléphone",
-        "placeholder": "+961 XX XXX XXX",
-        "error": "Veuillez entrer un numéro de téléphone libanais valide (+961 XX XXX XXX)"
+        "label": "Numéro de téléphone",
+        "placeholder": "+961 XX XXX XXX ou +1 234 567 8900",
+        "error": "Veuillez saisir un numéro de téléphone international valide (+Code pays numéro)"
       },
       "location": {
         "label": "Position",
@@ -144,8 +144,9 @@
     "copyright": "© 2024 KiTS Hub. Tous droits réservés.",
     "contact": {
       "title": "Contactez-nous",
-      "phone": "+961 76 62 30 30",
-      "whatsapp": "+961 76 62 30 30"
+      "phone": "+961 81 29 06 62",
+      "whatsapp": "+961 81 29 06 62",
+      "email": "kits.tech.co@gmail.com"
     }
   },
   "meta": {

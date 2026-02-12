@@ -89,8 +89,8 @@
       },
       "phone": {
         "label": "رقم الهاتف",
-        "placeholder": "+961 XX XXX XXX",
-        "error": "يرجى إدخال رقم هاتف لبناني صحيح (+961 XX XXX XXX)"
+        "placeholder": "+961 XX XXX XXX أو +1 234 567 8900",
+        "error": "يرجى إدخال رقم هاتف دولي صحيح (+رمز البلد الرقم)"
       },
       "location": {
         "label": "الموقع",
@@ -144,8 +144,9 @@
     "copyright": "© 2024 KiTS Hub. جميع الحقوق محفوظة.",
     "contact": {
       "title": "اتصل بنا",
-      "phone": "+961 76 62 30 30",
-      "whatsapp": "+961 76 62 30 30"
+      "phone": "+961 81 29 06 62",
+      "whatsapp": "+961 81 29 06 62",
+      "email": "kits.tech.co@gmail.com"
     }
   },
   "meta": {

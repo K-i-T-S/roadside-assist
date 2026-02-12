@@ -1,3 +1,5 @@
+'use client'
+
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Globe, ChevronDown } from 'lucide-react'

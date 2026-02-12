@@ -3,8 +3,8 @@
 ## Primary Contact Information
 
 **Email:** [kits.tech.co@gmail.com](mailto:kits.tech.co@gmail.com)  
-**Phone:** [+961 76 62 30 30](tel:+96176623030)  
-**WhatsApp:** [+961 76 62 30 30](https://wa.me/+96176623030)  
+**Phone:** [+961 81 29 06 62](tel:+96181290662)  
+**WhatsApp:** [+961 81 29 06 62](https://wa.me/+96181290662)  
 **Instagram:** [@kits_solutions](https://www.instagram.com/kits_solutions)
 
 ## Business Address

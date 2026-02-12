@@ -73,7 +73,7 @@ function DefaultErrorFallback({ error, reset }: { error?: Error; reset: () => vo
           </button>
           
           <a
-            href="tel:+96176623030"
+            href="tel:+96181290662"
             className="w-full bg-green-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
           >
             Contact Support

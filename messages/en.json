@@ -89,8 +89,8 @@
       },
       "phone": {
         "label": "Phone Number",
-        "placeholder": "+961 XX XXX XXX",
-        "error": "Please enter a valid Lebanese phone number (+961 XX XXX XXX)"
+        "placeholder": "+961 XX XXX XXX or +1 234 567 8900",
+        "error": "Please enter a valid international phone number (+Country Code Number)"
       },
       "location": {
         "label": "Location",
@@ -144,8 +144,9 @@
     "copyright": "© 2024 KiTS Hub. All rights reserved.",
     "contact": {
       "title": "Contact Us",
-      "phone": "+961 76 62 30 30",
-      "whatsapp": "+961 76 62 30 30"
+      "phone": "+961 81 29 06 62",
+      "whatsapp": "+961 81 29 06 62",
+      "email": "kits.tech.co@gmail.com"
     }
   },
   "meta": {
