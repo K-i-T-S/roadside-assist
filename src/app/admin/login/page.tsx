@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')
@@ -25,8 +26,8 @@ export default function AdminLogin() {
       if (error) throw error
 
       router.push('/admin/dashboard')
-    } catch (error: any) {
-      setError(error.message || 'Login failed')
+    } catch (error: unknown) {
+      setError((error instanceof Error && error.message) || 'Login failed')
     } finally {
       setLoading(false)
     }
@@ -88,9 +89,9 @@ export default function AdminLogin() {
           </form>
 
           <div className="mt-6 text-center">
-            <a href="/" className="text-blue-600 hover:text-blue-700 text-sm">
+            <Link href="/" className="text-blue-600 hover:text-blue-700 text-sm">
               ← Back to Home
-            </a>
+            </Link>
           </div>
         </div>
       </div>

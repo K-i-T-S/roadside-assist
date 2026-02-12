@@ -1,0 +1,156 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "clear": "Clear",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
+    "services": "Services",
+    "contact": "Contact",
+    "adminPortal": "Admin Portal",
+    "mobileMenu": {
+      "services": "Services",
+      "contact": "Contact",
+      "adminPortal": "Admin Portal"
+    }
+  },
+  "header": {
+    "brand": {
+      "title": "KiTS Roadside",
+      "tagline": "24/7 Emergency Assistance"
+    },
+    "emergency": {
+      "available247": "Available 24/7",
+      "callNow": "Call Now",
+      "whatsapp": "WhatsApp",
+      "emergencyHelp": "Emergency Help"
+    }
+  },
+  "hero": {
+    "badge": "Available 24/7 Across Lebanon",
+    "title": {
+      "line1": "Need Roadside",
+      "line2": "Assistance?"
+    },
+    "description": "Fast, reliable help when you need it most. Professional service across Lebanon with just a few taps on your phone.",
+    "cta": {
+      "getHelpNow": "Get Help Now",
+      "useMyLocation": "Use My Location",
+      "gettingLocation": "Getting Location..."
+    },
+    "trustBadges": {
+      "fastResponse": "Fast Response",
+      "professionalService": "Professional Service",
+      "affordableRates": "Affordable Rates",
+      "preciseLocation": "Precise Location"
+    }
+  },
+  "services": {
+    "tow": {
+      "label": "Tow Truck",
+      "description": "Professional towing service"
+    },
+    "battery_jump": {
+      "label": "Battery Jump",
+      "description": "Jump-start your vehicle"
+    },
+    "flat_tire": {
+      "label": "Flat Tire",
+      "description": "Tire change and repair"
+    },
+    "fuel_delivery": {
+      "label": "Fuel Delivery",
+      "description": "Emergency fuel delivery"
+    },
+    "minor_repair": {
+      "label": "Minor Repair",
+      "description": "On-site minor repairs"
+    }
+  },
+  "form": {
+    "title": "Request Assistance",
+    "fields": {
+      "service": {
+        "label": "Select Service",
+        "placeholder": "Choose a service",
+        "error": "Please select a service type"
+      },
+      "phone": {
+        "label": "Phone Number",
+        "placeholder": "+961 XX XXX XXX",
+        "error": "Please enter a valid Lebanese phone number (+961 XX XXX XXX)"
+      },
+      "location": {
+        "label": "Location",
+        "placeholder": "Share your Google Maps location link",
+        "error": "Please provide your location",
+        "invalidUrl": "Please provide a valid Google Maps link"
+      },
+      "notes": {
+        "label": "Additional Notes",
+        "placeholder": "Any additional information that might help us..."
+      }
+    },
+    "submit": "Submit Request",
+    "submitting": "Submitting..."
+  },
+  "location": {
+    "gettingLocation": "Getting your location...",
+    "locationDetected": "Location detected successfully",
+    "locationError": {
+      "notSupported": "Geolocation is not supported by your browser. Please enter your location manually.",
+      "permissionDenied": "Location access was denied. Please enable location services in your browser settings or enter your location manually. You can usually enable this by clicking the location icon in your browser address bar.",
+      "unavailable": "Location information is unavailable. This might be due to poor GPS signal or network issues. Please try again when outdoors or enter your location manually.",
+      "timeout": "Location request timed out. Please check your internet connection and try again, or enter your location manually.",
+      "unknown": "Unable to retrieve your location. Please enter your location manually or try again.",
+      "permissionsPolicy": "Location access is blocked by browser security settings. Please enter your location manually. This might be resolved by refreshing the page or checking your browser settings.",
+      "poorAccuracy": "Location accuracy is low ({accuracy}m). For better accuracy, please ensure you're outdoors with clear sky view, or enter your location manually.",
+      "approximateLocation": "Using approximate location ({accuracy}m accuracy). For precise location, please enable GPS or enter manually."
+    },
+    "map": {
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "resetView": "Reset View",
+      "openInMaps": "Open in Maps"
+    }
+  },
+  "success": {
+    "title": "Request Submitted!",
+    "message": "We&apos;ve received your request and will contact you shortly.",
+    "actions": {
+      "whatsapp": "Contact on WhatsApp",
+      "call": "Call Now",
+      "newRequest": "Submit Another Request"
+    }
+  },
+  "errors": {
+    "submissionFailed": "Failed to submit request. Please try again or contact us directly.",
+    "validation": "Please check the form for errors and try again.",
+    "network": "Network error. Please check your connection and try again."
+  },
+  "footer": {
+    "copyright": "© 2024 KiTS Hub. All rights reserved.",
+    "contact": {
+      "title": "Contact Us",
+      "phone": "+961 76 62 30 30",
+      "whatsapp": "+961 76 62 30 30"
+    }
+  },
+  "meta": {
+    "title": "KiTS Roadside Assistance - 24/7 Emergency Help in Lebanon",
+    "description": "Fast, reliable roadside assistance in Lebanon. 24/7 towing, battery jump, tire changes, fuel delivery, and minor repairs. Get help now!",
+    "keywords": "roadside assistance, towing, battery jump, flat tire, fuel delivery, Lebanon, 24/7 emergency"
+  }
+}

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import type { User } from '@supabase/supabase-js'
 import { Request, Provider, RequestStatus } from '@/types'
 import { Phone, MapPin, Clock, CheckCircle, AlertCircle, Users, TrendingUp } from 'lucide-react'
 
@@ -10,7 +12,7 @@ export default function AdminDashboard() {
   const [requests, setRequests] = useState<Request[]>([])
   const [providers, setProviders] = useState<Provider[]>([])
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function AdminDashboard() {
 
   const updateRequestStatus = async (requestId: string, status: RequestStatus, providerId?: string) => {
     try {
-      const updateData: any = { status }
+      const updateData: { status: RequestStatus; provider_id?: string } = { status }
       if (providerId) updateData.provider_id = providerId
 
       const { error } = await supabase
@@ -78,10 +80,10 @@ export default function AdminDashboard() {
 
   const getStatusColor = (status: RequestStatus) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800'
-      case 'assigned': return 'bg-blue-100 text-blue-800'
-      case 'completed': return 'bg-green-100 text-green-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'pending': return 'bg-yellow-200 text-yellow-900 font-semibold'
+      case 'assigned': return 'bg-blue-200 text-blue-900 font-semibold'
+      case 'completed': return 'bg-green-200 text-green-900 font-semibold'
+      default: return 'bg-gray-200 text-gray-900 font-semibold'
     }
   }
 
@@ -104,7 +106,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-700 text-lg font-medium">Loading...</div>
       </div>
     )
   }
@@ -115,12 +117,12 @@ export default function AdminDashboard() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
             <div className="flex items-center gap-4">
-              <span className="text-gray-600">{user?.email}</span>
+              <span className="text-gray-800 font-medium">{user?.email}</span>
               <button
                 onClick={handleLogout}
-                className="text-red-600 hover:text-red-700 font-medium"
+                className="text-red-700 hover:text-red-800 font-semibold transition-colors"
               >
                 Logout
               </button>
@@ -130,12 +132,23 @@ export default function AdminDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Navigation Links */}
+        <div className="mb-8 flex flex-wrap gap-4">
+          <Link
+            href="/admin/providers"
+            className="inline-flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+          >
+            <Users className="w-5 h-5" />
+            Manage Service Providers
+          </Link>
+        </div>
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Today's Requests</p>
+                <p className="text-base font-semibold text-gray-700">Today&apos;s Requests</p>
                 <p className="text-2xl font-bold text-gray-900">{todayRequests.length}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-500" />
@@ -145,7 +158,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Completed Today</p>
+                <p className="text-base font-semibold text-gray-700">Completed Today</p>
                 <p className="text-2xl font-bold text-gray-900">{completedToday}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-500" />
@@ -155,7 +168,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Active Providers</p>
+                <p className="text-base font-semibold text-gray-700">Active Providers</p>
                 <p className="text-2xl font-bold text-gray-900">{activeProviders}</p>
               </div>
               <Users className="w-8 h-8 text-purple-500" />
@@ -165,7 +178,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Pending Requests</p>
+                <p className="text-base font-semibold text-gray-700">Pending Requests</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {requests.filter(r => r.status === 'pending').length}
                 </p>
@@ -178,32 +191,32 @@ export default function AdminDashboard() {
         {/* Requests Table */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Requests</h2>
+            <h2 className="text-xl font-bold text-gray-900">Recent Requests</h2>
           </div>
           
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Time
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Service
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Location
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Provider
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -219,7 +232,7 @@ export default function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-gray-400" />
+                        <Phone className="w-4 h-4 text-gray-600" />
                         {request.user_phone}
                       </div>
                     </td>
@@ -228,7 +241,7 @@ export default function AdminDashboard() {
                         href={request.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                        className="text-blue-700 hover:text-blue-900 font-medium flex items-center gap-1 transition-colors"
                       >
                         <MapPin className="w-4 h-4" />
                         View Location
@@ -253,10 +266,10 @@ export default function AdminDashboard() {
                                   updateRequestStatus(request.id, 'assigned', e.target.value)
                                 }
                               }}
-                              className="text-xs border border-gray-300 rounded px-2 py-1"
+                              className="text-sm border-gray-400 border rounded px-3 py-2 font-medium bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                               defaultValue=""
                             >
-                              <option value="" disabled>Assign Provider</option>
+                              <option value="" disabled className="text-gray-500">Assign Provider</option>
                               {providers.filter(p => p.active).map(provider => (
                                 <option key={provider.id} value={provider.id}>
                                   {provider.name}
@@ -265,7 +278,7 @@ export default function AdminDashboard() {
                             </select>
                             <button
                               onClick={() => updateRequestStatus(request.id, 'completed')}
-                              className="text-green-600 hover:text-green-800 text-xs"
+                              className="text-green-700 hover:text-green-900 font-semibold text-sm transition-colors"
                             >
                               Complete
                             </button>
@@ -274,7 +287,7 @@ export default function AdminDashboard() {
                         {request.status === 'assigned' && (
                           <button
                             onClick={() => updateRequestStatus(request.id, 'completed')}
-                            className="text-green-600 hover:text-green-800 text-xs"
+                            className="text-green-700 hover:text-green-900 font-semibold text-sm transition-colors"
                           >
                             Mark Complete
                           </button>

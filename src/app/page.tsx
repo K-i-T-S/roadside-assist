@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react'
 import { Phone, MapPin, Wrench, Battery, Fuel, Car, Plus, AlertCircle, CheckCircle2, Loader2, LocateIcon } from 'lucide-react'
+import { LANGUAGE_CONFIG, SupportedLocale } from '@/types/i18n'
+import Link from 'next/link'
+import Image from 'next/image'
 import { ServiceType, NewRequest } from '@/types'
 import { supabase } from '@/lib/supabase/client'
 
@@ -423,7 +426,7 @@ export default function Home() {
             </div>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Request Submitted!</h1>
-          <p className="text-gray-600 mb-8">We've received your request and will contact you shortly.</p>
+          <p className="text-gray-600 mb-8">We&apos;ve received your request and will contact you shortly.</p>
           
           <div className="space-y-4">
             <a
@@ -479,12 +482,12 @@ export default function Home() {
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
                 <div className="relative bg-white rounded-lg p-2">
-                  <img 
+                  <Image 
                     src="/kits-logo.png" 
                     alt="KiTS Roadside Assistance Logo" 
                     className="h-12 w-auto transition-transform duration-300 group-hover:scale-110"
-                    width="48"
-                    height="48"
+                    width={48}
+                    height={48}
                   />
                 </div>
               </div>
@@ -514,12 +517,12 @@ export default function Home() {
                 Contact
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 group-hover:w-full transition-all duration-300"></span>
               </a>
-              <a 
+              <Link 
                 href="/admin" 
                 className="px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:shadow-lg hover:scale-105 hover:shadow-blue-500/25 text-sm lg:text-base lg:px-4"
               >
                 Admin Portal
-              </a>
+              </Link>
             </nav>
 
             {/* Mobile menu button */}
@@ -566,7 +569,7 @@ export default function Home() {
               >
                 Contact
               </a>
-              <a 
+              <Link 
                 href="/admin" 
                 className="block mx-4 mt-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors text-center"
                 onClick={() => {
@@ -577,7 +580,7 @@ export default function Home() {
                 }}
               >
                 Admin Portal
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -714,7 +717,7 @@ export default function Home() {
 
             {/* Request Form */}
             <div className="max-w-2xl mx-auto" id="request-form">
-              <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
+              <div className="bg-white backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
                 <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent mb-6">Request Assistance</h3>
               
               {/* Error Display */}
@@ -740,14 +743,14 @@ export default function Home() {
                         className={`p-4 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                           selectedService === service.type
                             ? 'border-blue-500 bg-blue-50 text-blue-700'
-                            : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                            : 'border-gray-200 hover:border-gray-300 text-black'
                         }`}
                         aria-pressed={selectedService === service.type}
                         aria-describedby={`service-desc-${service.type}`}
                       >
                         <div className="flex flex-col items-center gap-2">
                           <span aria-hidden="true">{service.icon}</span>
-                          <span className="text-sm font-medium">{service.label}</span>
+                          <span className="text-sm font-medium text-black">{service.label}</span>
                         </div>
                       </button>
                     ))}
@@ -771,14 +774,14 @@ export default function Home() {
                       id="phone"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-600 text-gray-900"
+                      className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800 text-black transition-all duration-200"
                       placeholder="+961 XX XXX XXX"
                       required
                       aria-describedby="phone-help"
                       aria-invalid={error?.includes('phone') ? 'true' : 'false'}
                     />
                   </div>
-                  <p id="phone-help" className="text-sm text-gray-500 mt-2">
+                  <p id="phone-help" className="text-sm text-gray-600 mt-2">
                     Enter your Lebanese phone number
                   </p>
                 </div>
@@ -795,7 +798,7 @@ export default function Home() {
                       id="location"
                       value={locationLink}
                       onChange={(e) => setLocationLink(e.target.value)}
-                      className="w-full pl-10 pr-24 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-600 text-gray-900"
+                      className="w-full pl-10 pr-24 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800 text-black transition-all duration-200"
                       placeholder="https://maps.google.com/..."
                       required
                       aria-describedby="location-help"
@@ -856,7 +859,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="mt-2 space-y-1">
-                    <p id="location-help" className="text-sm text-gray-500">
+                    <p id="location-help" className="text-sm text-gray-600">
                       Open Google Maps, share your location, and paste the link here
                     </p>
                     {locationPermission === 'denied' && (
@@ -903,7 +906,7 @@ export default function Home() {
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900">Interactive Map</h3>
-                          <p className="text-sm text-gray-500">Click to set your precise location</p>
+                          <p className="text-sm text-gray-600">Click to set your precise location</p>
                         </div>
                       </div>
                       <button
@@ -1029,20 +1032,20 @@ export default function Home() {
                           </div>
                           <div className="space-y-1">
                             <div className="flex justify-between items-center">
-                              <span className="text-xs text-gray-500">Latitude:</span>
+                              <span className="text-xs text-gray-600">Latitude:</span>
                               <span className="text-xs font-mono font-semibold text-gray-900">{mapCenter.lat.toFixed(6)}°</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="text-xs text-gray-500">Longitude:</span>
+                              <span className="text-xs text-gray-600">Longitude:</span>
                               <span className="text-xs font-mono font-semibold text-gray-900">{mapCenter.lng.toFixed(6)}°</span>
                             </div>
                             <div className="flex justify-between items-center">
-                              <span className="text-xs text-gray-500">Zoom:</span>
+                              <span className="text-xs text-gray-600">Zoom:</span>
                               <span className="text-xs font-mono font-semibold text-gray-900">{mapZoom}x</span>
                             </div>
                             {locationAccuracy && (
                               <div className="flex justify-between items-center">
-                                <span className="text-xs text-gray-500">Accuracy:</span>
+                                <span className="text-xs text-gray-600">Accuracy:</span>
                                 <span className="text-xs font-semibold text-blue-600">±{Math.round(locationAccuracy)}m</span>
                               </div>
                             )}
@@ -1178,11 +1181,11 @@ export default function Home() {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={3}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-600 text-gray-900"
+                    className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800 text-black transition-all duration-200"
                     placeholder="Describe your issue..."
                     aria-describedby="notes-help"
                   />
-                  <p id="notes-help" className="text-sm text-gray-500 mt-2">
+                  <p id="notes-help" className="text-sm text-gray-600 mt-2">
                     Provide any additional details that might help us assist you better
                   </p>
                 </div>
@@ -1317,7 +1320,7 @@ export default function Home() {
                 KiTS Hub
               </a>
             </p>
-            <p className="text-gray-500 text-xs mt-2">
+            <p className="text-gray-300 text-xs mt-2">
               ISO 9001:2015 Certified | GDPR Compliant | 24/7 Service
             </p>
           </div>
