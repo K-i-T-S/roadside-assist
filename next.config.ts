@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://maps.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://maps.googleapis.com; frame-src 'self' https://www.openstreetmap.org https://*.tile.openstreetmap.org https://www.google.com/maps;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://maps.googleapis.com https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://maps.googleapis.com https://vercel.live; frame-src 'self' https://www.openstreetmap.org https://*.tile.openstreetmap.org https://www.google.com/maps;",
           },
         ],
       },

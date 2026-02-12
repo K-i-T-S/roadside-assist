@@ -100,15 +100,16 @@ export default function Home() {
           : null
         
         if (currentGoogleUrl !== locationLink) {
+          const googleEmbedUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${parsed.lat},${parsed.lng}&zoom=${parsed.zoom || 16}`
+          const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${parsed.lng - 0.01},${parsed.lat - 0.01},${parsed.lng + 0.01},${parsed.lat + 0.01}&layer=mapnik&marker=${parsed.lat},${parsed.lng}`
           setMapCenter({ lat: parsed.lat, lng: parsed.lng })
           setMapZoom(parsed.zoom || 16)
-          setMapUrl(`https://www.google.com/maps?q=${parsed.lat},${parsed.lng}&z=${parsed.zoom || 16}`)
-          setMapProvider('google')
+          setMapUrl(mapProvider === 'google' ? googleEmbedUrl : osmUrl)
           setIsMapLoading(false)
         }
       }
     }
-  }, [locationLink, mapCenter, mapZoom])
+  }, [locationLink, mapCenter, mapZoom, mapProvider])
 
   const getCurrentLocation = async (): Promise<void> => {
     // Check if geolocation is supported
@@ -168,13 +169,14 @@ export default function Home() {
       // Create precise map link with zoom level based on accuracy
       const zoomLevel = accuracy > 1000 ? 15 : accuracy > 100 ? 16 : accuracy > 50 ? 17 : accuracy > 20 ? 18 : 19
       const preciseUrl = `https://maps.google.com/maps?q=${latitude},${longitude}&z=${zoomLevel}`
+      const googleEmbedUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${latitude},${longitude}&zoom=${zoomLevel}`
+      const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.01},${latitude - 0.01},${longitude + 0.01},${latitude + 0.01}&layer=mapnik&marker=${latitude},${longitude}`
       
       setLocationLink(preciseUrl)
       setLocationPermission('granted')
       setMapCenter({ lat: latitude, lng: longitude })
       setMapZoom(16)
-      setMapUrl(`https://www.google.com/maps?q=${latitude},${longitude}&z=16`)
-      setMapProvider('google')
+      setMapUrl(mapProvider === 'google' ? googleEmbedUrl : osmUrl)
       
       // Store accuracy info for user feedback
       if (accuracy <= 10) {
@@ -225,13 +227,14 @@ export default function Home() {
           
           const zoomLevel = accuracy > 500 ? 16 : accuracy > 100 ? 17 : accuracy > 50 ? 18 : 19
           const preciseUrl = `https://maps.google.com/maps?q=${latitude},${longitude}&z=${zoomLevel}`
+          const googleEmbedUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${latitude},${longitude}&zoom=${zoomLevel}`
+          const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.01},${latitude - 0.01},${longitude + 0.01},${latitude + 0.01}&layer=mapnik&marker=${latitude},${longitude}`
           
           setLocationLink(preciseUrl)
           setLocationPermission('granted')
           setMapCenter({ lat: latitude, lng: longitude })
           setMapZoom(16)
-          setMapUrl(`https://www.google.com/maps?q=${latitude},${longitude}&z=16`)
-          setMapProvider('google')
+          setMapUrl(mapProvider === 'google' ? googleEmbedUrl : osmUrl)
           console.log('Improved watchPosition location captured:', { latitude, longitude, accuracy: `${accuracy}m` })
           
         } catch (watchError) {
@@ -259,13 +262,14 @@ export default function Home() {
         setLocationAccuracy(accuracy)
         
         const fallbackUrl = `https://maps.google.com/maps?q=${latitude},${longitude}&z=16`
+        const googleEmbedUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${latitude},${longitude}&zoom=16`
+        const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.01},${latitude - 0.01},${longitude + 0.01},${latitude + 0.01}&layer=mapnik&marker=${latitude},${longitude}`
         
         setLocationLink(fallbackUrl)
         setLocationPermission('granted')
         setMapCenter({ lat: latitude, lng: longitude })
         setMapZoom(16)
-        setMapUrl(`https://www.google.com/maps?q=${latitude},${longitude}&z=16`)
-        setMapProvider('google')
+        setMapUrl(mapProvider === 'google' ? googleEmbedUrl : osmUrl)
         setError(`Using approximate location (${Math.round(accuracy)}m accuracy). For precise location, please enable GPS or enter manually.`)
         console.log('Fallback location captured:', { latitude, longitude, accuracy: `${accuracy}m` })
         
@@ -327,11 +331,11 @@ export default function Home() {
 
   const updateLocationFromMap = (lat: number, lng: number, zoom?: number): void => {
     const newZoom = zoom || mapZoom
-    const googleUrl = `https://www.google.com/maps?q=${lat},${lng}&z=${newZoom}`
-    const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.05},${lat - 0.05},${lng + 0.05},${lat + 0.05}&layer=mapnik&marker=${lat},${lng}`
+    const googleUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${lat},${lng}&zoom=${newZoom}`
+    const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01},${lat - 0.01},${lng + 0.01},${lat + 0.01}&layer=mapnik&marker=${lat},${lng}`
     
     // Update all states atomically
-    setLocationLink(googleUrl)
+    setLocationLink(`https://maps.google.com/maps?q=${lat},${lng}&z=${newZoom}`)
     setMapCenter({ lat, lng })
     setMapZoom(newZoom)
     setMapUrl(mapProvider === 'google' ? googleUrl : osmUrl)
@@ -990,9 +994,8 @@ export default function Home() {
                             onClick={() => {
                               setMapProvider('google')
                               if (mapCenter) {
-                                const googleUrl = `https://www.google.com/maps?q=${mapCenter.lat},${mapCenter.lng}&z=${mapZoom}`
+                                const googleUrl = `https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${mapCenter.lat},${mapCenter.lng}&zoom=${mapZoom}`
                                 setMapUrl(googleUrl)
-                                setLocationLink(googleUrl)
                               }
                             }}
                             className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
@@ -1030,7 +1033,7 @@ export default function Home() {
                           title="Interactive Google Maps"
                           onLoad={() => setIsMapLoading(false)}
                           onError={() => {
-                            console.log('Google Maps blocked, switching to OpenStreetMap')
+                            console.log('Google Maps failed to load, switching to OpenStreetMap')
                             setMapProvider('osm')
                             if (mapCenter) {
                               const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${mapCenter.lng - 0.01},${mapCenter.lat - 0.01},${mapCenter.lng + 0.01},${mapCenter.lat + 0.01}&layer=mapnik&marker=${mapCenter.lat},${mapCenter.lng}`
