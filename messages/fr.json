@@ -89,8 +89,16 @@
       },
       "phone": {
         "label": "Numéro de téléphone",
-        "placeholder": "+961 XX XXX XXX ou +1 234 567 8900",
-        "error": "Veuillez saisir un numéro de téléphone international valide (+Code pays numéro)"
+        "placeholder": "Entrez votre numéro de téléphone libanais (ex.: 81290662)",
+        "help": "Commence par +961 pour le Liban. Tapez simplement les 8 chiffres si vous utilisez un numéro libanais.",
+        "error": {
+          "required": "Le numéro de téléphone est requis pour vous contacter pour l'assistance routière",
+          "invalidFormat": "Le numéro de téléphone doit commencer par + suivi du code pays (ex.: +961 pour le Liban)",
+          "invalidCountryCode": "Veuillez saisir un code pays et un numéro de téléphone valides (ex.: +961 81 29 06 62)",
+          "lebaneseDigits": "Les numéros de téléphone libanais doivent avoir exactement 8 chiffres après +961 (ex.: +961 81 29 06 62)",
+          "digitsOnly": "Le numéro de téléphone ne peut contenir que des chiffres après le code pays",
+          "otherCountry": "Les numéros de téléphone internationaux doivent avoir 6-12 chiffres après le code pays"
+        }
       },
       "location": {
         "label": "Position",

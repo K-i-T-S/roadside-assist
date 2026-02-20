@@ -89,8 +89,16 @@
       },
       "phone": {
         "label": "Phone Number",
-        "placeholder": "+961 XX XXX XXX or +1 234 567 8900",
-        "error": "Please enter a valid international phone number (+Country Code Number)"
+        "placeholder": "Enter your Lebanese phone number (e.g., 81290662)",
+        "help": "Starts with +961 for Lebanon. Just type the 8 digits if using Lebanese number.",
+        "error": {
+          "required": "Phone number is required to contact you for roadside assistance",
+          "invalidFormat": "Phone number must start with + followed by country code (e.g., +961 for Lebanon)",
+          "invalidCountryCode": "Please enter a valid country code and phone number (e.g., +961 81 290 662)",
+          "lebaneseDigits": "Lebanese phone numbers must have exactly 8 digits after +961 (e.g., +961 81 290 662)",
+          "digitsOnly": "Phone number can only contain digits after the country code",
+          "otherCountry": "International phone numbers must be 6-12 digits after the country code"
+        }
       },
       "location": {
         "label": "Location",

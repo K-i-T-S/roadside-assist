@@ -4,6 +4,9 @@ export function useLocalStorage<T>(
   key: string,
   initialValue: T
 ): [T, (value: T | ((val: T) => T)) => void] {
+  // State to store our value
+  const [storedValue, setStoredValue] = useState<T>(initialValue)
+
   // Get from local storage then parse stored json or return initialValue
   const readValue = (): T => {
     if (typeof window === 'undefined') {
@@ -19,7 +22,10 @@ export function useLocalStorage<T>(
     }
   }
 
-  const [storedValue, setStoredValue] = useState<T>(readValue)
+  // Load value from localStorage on mount
+  useEffect(() => {
+    setStoredValue(readValue())
+  }, [])
 
   const setValue = (value: T | ((val: T) => T)) => {
     try {

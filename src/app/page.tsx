@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ServiceType, NewRequest } from '@/types'
 import { supabase } from '@/lib/supabase/client'
+import { useTranslations } from 'next-intl'
 
 const serviceOptions: { type: ServiceType; label: string; icon: React.ReactNode; description: string }[] = [
   { type: 'tow', label: 'Tow Truck', icon: <Car className="w-6 h-6" />, description: 'Professional towing service' },
@@ -16,9 +17,13 @@ const serviceOptions: { type: ServiceType; label: string; icon: React.ReactNode;
   { type: 'minor_repair', label: 'Minor Repair', icon: <Wrench className="w-6 h-6" />, description: 'On-site minor repairs' },
 ]
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
+  const t = useTranslations()
   const [selectedService, setSelectedService] = useState<ServiceType | null>(null)
   const [phone, setPhone] = useState('+961 ')
+  const [phoneError, setPhoneError] = useState<string | null>(null)
   const [locationLink, setLocationLink] = useState('')
   const [notes, setNotes] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -35,9 +40,79 @@ export default function Home() {
   const [mapProvider, setMapProvider] = useState<'google' | 'osm'>('google') // Track which provider is being used
   const [isClient, setIsClient] = useState(false) // To prevent hydration mismatch
 
-  const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^\+\d{1,4}\d{6,12}$/
-    return phoneRegex.test(phone.replace(/\s/g, ''))
+  const validatePhone = (phone: string): { isValid: boolean; formatted?: string; errorKey?: string } => {
+    const cleaned = phone.replace(/\s/g, '')
+    
+    // Check if it starts with +
+    if (!cleaned.startsWith('+')) {
+      return { isValid: false, errorKey: 'invalidFormat' }
+    }
+    
+    // Extract country code and number
+    const parts = cleaned.substring(1).split(/(\d{1,4})/).filter(Boolean)
+    if (parts.length < 2) {
+      return { isValid: false, errorKey: 'invalidCountryCode' }
+    }
+    
+    const countryCode = parts[0]
+    const numberPart = parts.slice(1).join('')
+    
+    // For Lebanon (+961), expect exactly 8 digits
+    if (countryCode === '961') {
+      if (numberPart.length !== 8) {
+        return { isValid: false, errorKey: 'lebaneseDigits' }
+      }
+      if (!/^\d{8}$/.test(numberPart)) {
+        return { isValid: false, errorKey: 'digitsOnly' }
+      }
+      // Format: +961 81 290 662
+      const formatted = `+961 ${numberPart.slice(0, 2)} ${numberPart.slice(2, 5)} ${numberPart.slice(5)}`
+      return { isValid: true, formatted }
+    }
+    
+    // For other countries, basic validation
+    if (numberPart.length < 6 || numberPart.length > 12) {
+      return { isValid: false, errorKey: 'otherCountry' }
+    }
+    if (!/^\d+$/.test(numberPart)) {
+      return { isValid: false, errorKey: 'digitsOnly' }
+    }
+    
+    return { isValid: true, formatted: cleaned }
+  }
+
+  const handlePhoneChange = (value: string) => {
+    // Allow editing, but smart formatting
+    let formattedValue = value
+    
+    // If user types just digits, assume Lebanese number
+    if (/^\d+$/.test(value.replace(/\s/g, ''))) {
+      const digits = value.replace(/\s/g, '')
+      if (digits.length <= 8) {
+        formattedValue = `+961 ${digits.slice(0, 2)}${digits.length > 2 ? ' ' : ''}${digits.slice(2, 5)}${digits.length > 5 ? ' ' : ''}${digits.slice(5)}`
+      } else {
+        // If more than 8 digits, keep as is but add +
+        formattedValue = `+${digits}`
+      }
+    } else if (!value.startsWith('+') && value.length > 0) {
+      // If doesn't start with + and has content, add +
+      formattedValue = `+${value}`
+    }
+    
+    setPhone(formattedValue)
+    
+    // Validate and set error
+    if (formattedValue.trim() === '+961' || formattedValue.trim() === '+') {
+      setPhoneError(null) // Allow empty or just country code
+    } else {
+      const validation = validatePhone(formattedValue)
+      if (validation.isValid) {
+        setPhone(formattedValue)
+        setPhoneError(null)
+      } else {
+        setPhoneError(t(`form.fields.phone.error.${validation.errorKey}`))
+      }
+    }
   }
 
   const validateUrl = (url: string): boolean => {
@@ -84,10 +159,32 @@ export default function Home() {
     }
   }, [])
 
-  // Set isClient to true after mount
+  // Scroll to error when it appears
   React.useEffect(() => {
-    setIsClient(true)
-  }, [])
+    if (error) {
+      // Small delay to ensure the error element is rendered
+      setTimeout(() => {
+        const errorElement = document.getElementById('top-error')
+        if (errorElement) {
+          errorElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          })
+        } else {
+          // Fallback to form if error element is not found
+          const formElement = document.getElementById('request-form')
+          if (formElement) {
+            const rect = formElement.getBoundingClientRect()
+            window.scrollTo({
+              top: window.scrollY + rect.top - 100,
+              behavior: 'smooth'
+            })
+          }
+        }
+      }, 100)
+    }
+  }, [error])
 
   // Parse locationLink when it changes
   React.useEffect(() => {
@@ -415,19 +512,23 @@ export default function Home() {
     
     // Validation
     if (!selectedService) {
-      setError('Please select a service type')
+      setError(t('form.fields.service.error'))
       return
     }
     
-    if (!phone) {
-      setError('Please enter your phone number')
+    if (!phone || phone.trim() === '+961' || phone.trim() === '+') {
+      setError(t('form.fields.phone.error.required'))
       return
     }
     
-    if (!validatePhone(phone)) {
-      setError('Please enter a valid international phone number (+Country Code Number)')
+    const phoneValidation = validatePhone(phone)
+    if (!phoneValidation.isValid) {
+      setError(t(`form.fields.phone.error.${phoneValidation.errorKey}`))
       return
     }
+    
+    // Use the formatted version
+    const formattedPhone = phoneValidation.formatted || phone
     
     if (!locationLink) {
       setError('Please provide your location')
@@ -444,7 +545,7 @@ export default function Home() {
     try {
       const newRequest: NewRequest = {
         service_type: selectedService,
-        user_phone: phone,
+        user_phone: formattedPhone,
         location_link: locationLink,
         notes: notes || undefined,
       }
@@ -507,6 +608,7 @@ export default function Home() {
                 setSubmitted(false)
                 setSelectedService(null)
                 setPhone('+961 ')
+                setPhoneError(null)
                 setLocationLink('')
                 setNotes('')
                 setError(null)
@@ -775,7 +877,7 @@ export default function Home() {
               
               {/* Error Display */}
               {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+                <div id="top-error" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" aria-hidden="true" />
                   <p className="text-red-700 text-sm">{error}</p>
                 </div>
@@ -818,7 +920,7 @@ export default function Home() {
                 {/* Phone Number */}
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
+                    {t('form.fields.phone.label')}
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" aria-hidden="true" />
@@ -826,16 +928,24 @@ export default function Home() {
                       type="tel"
                       id="phone"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-800 text-black transition-all duration-200"
-                      placeholder="+961 XX XXX XXX"
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      className={`w-full pl-10 pr-4 py-3 bg-white border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 text-black transition-all duration-200 ${
+                        phoneError ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      placeholder={t('form.fields.phone.placeholder')}
                       required
-                      aria-describedby="phone-help"
-                      aria-invalid={error?.includes('phone') ? 'true' : 'false'}
+                      aria-describedby="phone-help phone-error"
+                      aria-invalid={phoneError ? 'true' : 'false'}
                     />
                   </div>
-                  <p id="phone-help" className="text-sm text-gray-600 mt-2">
-                    Enter your Lebanese phone number
+                  {phoneError && (
+                    <p id="phone-error" className="text-sm text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {phoneError}
+                    </p>
+                  )}
+                  <p id="phone-help" className="text-sm text-gray-600 mt-1">
+                    {t('form.fields.phone.help')}
                   </p>
                 </div>
 
@@ -1244,10 +1354,9 @@ export default function Home() {
                   </p>
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={!selectedService || !phone || !locationLink || isSubmitting}
+                  disabled={!phone || !locationLink || isSubmitting}
                   className="w-full bg-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   aria-describedby="submit-help"
                 >

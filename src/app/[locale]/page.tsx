@@ -46,9 +46,45 @@ export default function Home() {
   ], [t])
 
   // Memoize validation functions
-  const validatePhone = useCallback((phone: string): boolean => {
-    const phoneRegex = /^\+\d{1,4}\d{6,12}$/
-    return phoneRegex.test(phone.replace(/\s/g, ''))
+  const validatePhone = useCallback((phone: string): { isValid: boolean; formatted?: string; errorKey?: string } => {
+    const cleaned = phone.replace(/\s/g, '')
+    
+    // Check if it starts with +
+    if (!cleaned.startsWith('+')) {
+      return { isValid: false, errorKey: 'invalidFormat' }
+    }
+    
+    // Extract country code and number
+    const parts = cleaned.substring(1).split(/(\d{1,4})/).filter(Boolean)
+    if (parts.length < 2) {
+      return { isValid: false, errorKey: 'invalidCountryCode' }
+    }
+    
+    const countryCode = parts[0]
+    const numberPart = parts.slice(1).join('')
+    
+    // For Lebanon (+961), expect exactly 8 digits
+    if (countryCode === '961') {
+      if (numberPart.length !== 8) {
+        return { isValid: false, errorKey: 'lebaneseDigits' }
+      }
+      if (!/^\d{8}$/.test(numberPart)) {
+        return { isValid: false, errorKey: 'digitsOnly' }
+      }
+      // Format: +961 81 290 662
+      const formatted = `+961 ${numberPart.slice(0, 2)} ${numberPart.slice(2, 5)} ${numberPart.slice(5)}`
+      return { isValid: true, formatted }
+    }
+    
+    // For other countries, basic validation
+    if (numberPart.length < 6 || numberPart.length > 12) {
+      return { isValid: false, errorKey: 'otherCountry' }
+    }
+    if (!/^\d+$/.test(numberPart)) {
+      return { isValid: false, errorKey: 'digitsOnly' }
+    }
+    
+    return { isValid: true, formatted: cleaned }
   }, [])
 
   const validateUrl = useCallback((url: string): boolean => {
@@ -98,6 +134,33 @@ export default function Home() {
   React.useEffect(() => {
     setIsClient(true)
   }, [])
+
+  // Scroll to error when it appears
+  React.useEffect(() => {
+    if (error) {
+      // Small delay to ensure the error element is rendered
+      setTimeout(() => {
+        const errorElement = document.getElementById('top-error')
+        if (errorElement) {
+          errorElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          })
+        } else {
+          // Fallback to form if error element is not found
+          const formElement = document.getElementById('request-form')
+          if (formElement) {
+            const rect = formElement.getBoundingClientRect()
+            window.scrollTo({
+              top: window.scrollY + rect.top - 100,
+              behavior: 'smooth'
+            })
+          }
+        }
+      }, 100)
+    }
+  }, [error])
 
   // Parse locationLink when it changes
   React.useEffect(() => {
@@ -273,14 +336,18 @@ export default function Home() {
     }
     
     if (!phone) {
-      setError(t('form.fields.phone.error'))
+      setError(t('form.fields.phone.error.required'))
       return
     }
     
-    if (!validatePhone(phone)) {
-      setError(t('form.fields.phone.error'))
+    const phoneValidation = validatePhone(phone)
+    if (!phoneValidation.isValid) {
+      setError(t(`form.fields.phone.error.${phoneValidation.errorKey}`))
       return
     }
+    
+    // Use the formatted version
+    const formattedPhone = phoneValidation.formatted || phone
     
     if (!locationLink) {
       setError(t('form.fields.location.error'))
@@ -297,7 +364,7 @@ export default function Home() {
     try {
       const newRequest: NewRequest = {
         service_type: selectedService,
-        user_phone: phone,
+        user_phone: formattedPhone,
         location_link: locationLink,
         notes: notes || undefined,
       }
@@ -564,7 +631,7 @@ export default function Home() {
                 <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent mb-6">{t('form.title')}</h3>
               
                 {error && (
-                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+                  <div id="top-error" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
                     <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" aria-hidden="true" />
                     <p className="text-red-700 text-sm">{error}</p>
                   </div>
