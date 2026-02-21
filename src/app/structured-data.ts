@@ -35,7 +35,7 @@ export const structuredData = {
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+961 76 62 30 30",
+    "telephone": "+961 81 290 662",
     "contactType": "emergency",
     "availableLanguage": ["English", "Arabic", "French"],
     "hoursAvailable": "24/7"
@@ -81,3 +81,8 @@ export const websiteStructuredData = {
     "url": "https://kitshub.vercel.app"
   }
 }
+
+// Stable stringified versions for hydration consistency
+export const structuredDataString = JSON.stringify(structuredData)
+export const breadcrumbStructuredDataString = JSON.stringify(breadcrumbStructuredData)
+export const websiteStructuredDataString = JSON.stringify(websiteStructuredData)
