@@ -16,7 +16,7 @@ const serviceOptions: { type: ServiceType; labelEn: string; labelAr: string; lab
     labelEn: 'Professional Towing', 
     labelAr: 'قطر احترافي', 
     labelArabizi: 'Bo2trak', 
-    icon: <div className="w-30 h-35 bg-white rounded-full p-2 flex items-center justify-center"><img src="/tow.png" alt="Towing" className="w-full h-full object-contain" /></div>, 
+    icon: <div className="w-45 h-40 bg-white rounded-full p-2 flex items-center justify-center"><img src="/tow.png" alt="Towing" className="w-full h-full object-contain" /></div>, 
     description: 'Professional towing service',
     tagline: 'We move mountains for you'
   },
@@ -25,7 +25,7 @@ const serviceOptions: { type: ServiceType; labelEn: string; labelAr: string; lab
     labelEn: 'Battery Rescue', 
     labelAr: 'إنقاذ بطارية', 
     labelArabizi: '3ewez Tedkeer', 
-    icon: <div className="w-30 h-30 bg-white rounded-full p-2 flex items-center justify-center"><img src="/battery.png" alt="Battery" className="w-full h-full object-contain" /></div>, 
+    icon: <div className="w-40 h-30 bg-white rounded-full p-2 flex items-center justify-center"><img src="/battery.png" alt="Battery" className="w-full h-full object-contain" /></div>, 
     description: 'Jump-start your vehicle',
     tagline: 'Power up your journey'
   },
@@ -34,7 +34,7 @@ const serviceOptions: { type: ServiceType; labelEn: string; labelAr: string; lab
     labelEn: 'Tire Service', 
     labelAr: 'خدمة الإطارات', 
     labelArabizi: 'Mbanshar?', 
-    icon: <div className="w-30 h-30 bg-white rounded-full p-2 flex items-center justify-center"><img src="/tire.png" alt="Tire" className="w-full h-full object-contain" /></div>, 
+    icon: <div className="w-45 h-35 bg-white rounded-full p-2 flex items-center justify-center"><img src="/tire.png" alt="Tire" className="w-full h-full object-contain" /></div>, 
     description: 'Tire change and repair',
     tagline: 'Back on the road'
   },
@@ -359,7 +359,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="btn-modern bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700 flex items-center justify-center gap-3"
               >
-                <Phone className="w-5 h-5" />
+                <img src="/whatsapp.png" alt="WhatsApp" className="w-5 h-5" />
                 <span>WhatsApp | واتساب</span>
               </a>
               
@@ -449,9 +449,9 @@ export default function Home() {
           <div className="flex justify-center mb-8 ">
             <div className="relative w-50 h-35 ">
               <Image 
-                src="/man-standing-next-broken-down-600nw-2468888759-removebg-preview (2).png"
+                src="/brokencar.png"
                 alt="Man standing next to broken down car"
-                className="w-full h-full bg-emerald-50 rounded-full flex items-center justify-center mb-0 mt-10 animate-float-smooth object-contain"
+                className="w-full h-full rounded-full flex items-center justify-center mb-0 mt-10 animate-float-smooth object-contain"
                 width={256}
                 height={160}
               />
@@ -468,16 +468,16 @@ export default function Home() {
             
             {/* Main Headline */}
             <div className="mb-5">
-              <h1 className="text-5xl md:text-7xl font-black mb-3 leading-tight">
-                <span className="block flex items-center justify-center gap-3 text-6xl md:text-8xl text-orange-500">
-                  <span>MA2T<span className="inline-block align-middle" style={{borderRadius: '50%'}}><Image src="/o.png" alt="O" width={85} height={85} className="w-12 h-12 md:w-16 md:h-16 mb-3 rounded-full" style={{objectFit: 'contain'}}/></span>U3?</span>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-3 leading-tight">
+                <span className="block flex items-center justify-center gap-2 sm:gap-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-orange-500">
+                  <span>MA2T<span className="inline-block align-middle" style={{borderRadius: '60%'}}><Image src="/o.png" alt="O" width={80} height={80} className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-18 lg:h-18 xl:w-20 xl:h-20 mb-2 sm:mb-3 rounded-full" style={{objectFit: 'contain'}}/></span>U3?</span>
                 </span>
                 <div className="text-gradient-modern">
-                  <span className="block text-3xl md:text-5xl mt-3 font-bold">مقطوع؟</span>
-                  <span className="block text-2xl md:text-3xl mt-3 ">Do you need roadside assistance?</span>
+                  <span className="block text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-2 sm:mt-3 font-bold">مقطوع؟</span>
+                  <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl mt-2 sm:mt-3">Do you need roadside assistance?</span>
                 </div>
               </h1>
-              <span className="text-lg text-gray-700">Bkam Kabse Menseer 3endak!</span>
+              <span className="text-base sm:text-lg md:text-xl text-gray-700">Bkam Kabse Menseer 3endak!</span>
             </div>
           </div>
         </div>
@@ -490,76 +490,128 @@ export default function Home() {
             {/* Form Header */}
             <div className="text-center mb-8">
               <div className='mt-0 mb-5'>
-                <span className="text-3xl font-bold underline mt-1 mb-3 text-orange-700">Shi 5ateer ?!
+                <span className="text-2xl sm:text-3xl font-bold underline mt-1 mb-3 text-orange-700 block">Shi 5ateer ?!
                   {/* <br></br> De22 lal Dawle Ya 8aali: */}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-3 mb-4 max-w-md mx-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 max-w-2xl mx-auto px-2">
                 {/* Red Cross */}
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 mb-2 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mb-1 sm:mb-2 flex items-center justify-center">
                     <img 
                       src="/red-cross-lebanon.png" 
                       alt="Red Cross Lebanon" 
                       className="w-full h-full object-contain"
                     />
                   </div>
+                  <div className="text-center mb-1 px-1">
+                    <p className="text-xs font-medium text-gray-700 leading-tight hidden sm:block">
+                      Medical Aid<br/>
+                      <span className="text-xs text-gray-500">صليب احمر</span>
+                    </p>
+                    <p className="text-xs font-medium text-gray-700 block sm:hidden">
+                      Medical<br/>
+                      <span className="text-xs text-gray-500">صليب احمر</span>
+                    </p>
+                  </div>
                   <a 
                     href="tel:140"
-                    className="btn-modern bg-gradient-to-r from-red-500 to-red-700 text-white px-2 py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up flex items-center justify-center hover:scale-105 transition-all w-full h-12 sm:h-13 min-w-0 overflow-hidden"
+                    className="btn-modern bg-gradient-to-r from-red-500 to-red-700 text-white px-1 sm:px-2 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up flex items-center justify-center hover:scale-105 transition-all w-full min-h-[36px] sm:min-h-[44px] lg:min-h-[48px] overflow-hidden"
                   >
-                    <span className="text-center leading-normal px-1">140 - RedCross</span>
+                    <span className="text-center leading-tight px-0.5 sm:px-1 truncate w-full">
+                      <span className="block sm:hidden">140</span>
+                      <span className="hidden sm:block">140</span>
+                    </span>
                   </a>
                 </div>
                 
                 {/* Police */}
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 mb-2 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mb-1 sm:mb-2 flex items-center justify-center">
                     <img 
                       src="/lebanese-police.png" 
                       alt="Lebanese Police" 
                       className="w-full h-full object-contain"
                     />
                   </div>
+                  <div className="text-center mb-1 px-1">
+                    <p className="text-xs font-medium text-gray-700 leading-tight hidden sm:block">
+                      Police<br/>
+                      <span className="text-xs text-gray-500">شرطة</span>
+                    </p>
+                    <p className="text-xs font-medium text-gray-700 block sm:hidden">
+                      Police<br/>
+                      <span className="text-xs text-gray-500">شرطة</span>
+                    </p>
+                  </div>
                   <a 
                     href="tel:112"
-                    className="btn-modern bg-gradient-to-r from-blue-500 to-blue-700 text-white px-2 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up animate-delay-100 flex items-center justify-center hover:scale-105 transition-all w-full h-11 sm:h-12 min-w-0 overflow-hidden"
+                    className="btn-modern bg-gradient-to-r from-blue-500 to-blue-700 text-white px-1 sm:px-2 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up animate-delay-100 flex items-center justify-center hover:scale-105 transition-all w-full min-h-[36px] sm:min-h-[44px] lg:min-h-[48px] overflow-hidden"
                   >
-                    <span className="text-center leading-tight px-1">112 - Police</span>
+                    <span className="text-center leading-tight px-0.5 sm:px-1 truncate w-full">
+                      <span className="block sm:hidden">112</span>
+                      <span className="hidden sm:block">112</span>
+                    </span>
                   </a>
                 </div>
                 
                 {/* Lebanese Army */}
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 mb-2 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mb-1 sm:mb-2 flex items-center justify-center">
                     <img 
                       src="/lebanese-army.png" 
                       alt="Lebanese Army" 
                       className="w-full h-full object-contain"
                     />
                   </div>
+                  <div className="text-center mb-1 px-1">
+                    <p className="text-xs font-medium text-gray-700 leading-tight hidden sm:block">
+                      Military <br/>
+                      <span className="text-xs text-gray-500"> الجيش</span>
+                    </p>
+                    <p className="text-xs font-medium text-gray-700 block sm:hidden">
+                      Military<br/>
+                      <span className="text-xs text-gray-500">الجيش</span>
+                    </p>
+                  </div>
                   <a 
                     href="tel:1701"
-                    className="btn-modern bg-gradient-to-r from-green-500 to-green-700 text-white px-2 py-2 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up animate-delay-200 flex items-center justify-center hover:scale-105 transition-all w-full h-11 sm:h-12 min-w-0 overflow-hidden"
+                    className="btn-modern bg-gradient-to-r from-green-500 to-green-700 text-white px-1 sm:px-2 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up animate-delay-200 flex items-center justify-center hover:scale-105 transition-all w-full min-h-[36px] sm:min-h-[44px] lg:min-h-[48px] overflow-hidden"
                   >
-                    <span className="text-center leading-tight px-1">1701 - Army</span>
+                    <span className="text-center leading-tight px-0.5 sm:px-1 truncate w-full">
+                      <span className="block sm:hidden">1701</span>
+                      <span className="hidden sm:block">1701</span>
+                    </span>
                   </a>
                 </div>
                 
                 {/* Fire Department */}
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 mb-2 flex items-center justify-center">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 mb-1 sm:mb-2 flex items-center justify-center">
                     <img 
                       src="/fire-department.png" 
                       alt="Lebanese Fire Department" 
                       className="w-full h-full object-contain"
                     />
                   </div>
+                  <div className="text-center mb-1 px-1">
+                    <p className="text-xs font-medium text-gray-700 leading-tight hidden sm:block">
+                      Fire & Rescue<br/>
+                      <span className="text-xs text-gray-500">إطفاء وإنقاذ</span>
+                    </p>
+                    <p className="text-xs font-medium text-gray-700 block sm:hidden">
+                      Fire<br/>
+                      <span className="text-xs text-gray-500">إطفاء</span>
+                    </p>
+                  </div>
                   <a 
                     href="tel:125"
-                    className="btn-modern bg-gradient-to-r from-orange-500 to-orange-700 text-white px-2 py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up animate-delay-300 flex items-center justify-center hover:scale-105 transition-all w-full h-12 sm:h-13 min-w-0 overflow-hidden"
+                    className="btn-modern bg-gradient-to-r from-orange-500 to-orange-700 text-white px-1 sm:px-2 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-slide-up animate-delay-300 flex items-center justify-center hover:scale-105 transition-all w-full min-h-[36px] sm:min-h-[44px] lg:min-h-[48px] overflow-hidden"
                   >
-                    <span className="text-center leading-normal px-1">125 - FireDept</span>
+                    <span className="text-center leading-tight px-0.5 sm:px-1 truncate w-full">
+                      <span className="block sm:hidden">125</span>
+                      <span className="hidden sm:block">125</span>
+                    </span>
                   </a>
                 </div>
               </div>
@@ -643,7 +695,7 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="bg-green-600 text-white px-6 py-4 rounded-xl font-bold hover:bg-green-700 transition-all hover:scale-105 flex items-center justify-center gap-3 text-lg shadow-lg min-w-[180px]"
                   >
-                    <Phone className="w-5 h-5 flex-shrink-0" />
+                    <img src="/whatsapp.png" alt="WhatsApp" className="w-5 h-5 flex-shrink-0" />
                     <div className="flex flex-col">
                       <span className="text-base">WhatsApp</span>
                       <span className="text-sm Arabic-text">واتساب</span>
@@ -772,7 +824,7 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="btn-modern bg-green-500 text-white px-8 py-4 rounded-xl font-bold hover:bg-green-600 transition-all hover:scale-105 flex items-center gap-3"
                 >
-                  <Phone className="w-6 h-6" />
+                  <img src="/whatsapp.png" alt="WhatsApp" className="w-6 h-6" />
                   <span>WhatsApp | واتساب</span>
                 </a>
               </div>
@@ -781,8 +833,8 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Company Info */}
-            <div className="text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-4 mb-6">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-4 mb-6">
                 <div className="relative">
                   <div className="absolute -inset-3 lebanese-gradient-subtle rounded-full blur-lg opacity-50 animate-glow"></div>
                   <Image 
@@ -840,11 +892,11 @@ export default function Home() {
                   aria-label="Contact us on WhatsApp"
                 >
                   <div className="flex items-center justify-center gap-2">
-                   
+                    <img src="/whatsapp.png" alt="WhatsApp" className="w-5 h-5" />
                     <span>WhatsApp: +961 81 29 06 62</span>
                   </div>
                 </a>
-                <div className="flex justify-center md:justify-start space-x-4">
+                <div className="flex justify-center space-x-4">
                 <a 
                   href="https://www.instagram.com/kits_solutions" 
                   target="_blank" 
@@ -859,8 +911,8 @@ export default function Home() {
             </div>
 
             {/* Admin Portal & Legal */}
-            <div className="text-center md:text-right">
-              <h3 className="text-2xl font-bold mb-6 flex items-center justify-center md:justify-end gap-2">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold mb-6 flex items-center justify-center gap-2">
                 <Shield className="w-8 h-8 text-purple-400" />
                 <span>Admin  | الإدارة</span>
                 <Shield className="w-8 h-8 text-purple-400" />

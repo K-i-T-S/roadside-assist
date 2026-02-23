@@ -43,16 +43,16 @@ export function Modal({ isOpen, onClose, title, children, showCallOptions = true
         
         {/* Call Options Bar */}
         {showCallOptions && (
-          <div className="bg-red-50 border-b border-red-200 px-6 py-3">
-            <div className="flex items-center justify-between">
+          <div className="bg-red-50 border-b border-red-200 px-4 sm:px-6 py-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-red-600" />
+                <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
                 <span className="text-sm font-medium text-red-800">Need immediate help? | تحتاج مساعدة عاجلة؟</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <a
                   href="tel:+96181290662"
-                  className="bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-red-700 transition-colors flex items-center gap-1 min-w-[80px]"
+                  className="bg-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-1 min-w-[80px]"
                 >
                   <Phone className="w-3 h-3 flex-shrink-0" />
                   <span>Call</span>
@@ -61,9 +61,9 @@ export function Modal({ isOpen, onClose, title, children, showCallOptions = true
                   href="https://wa.me/96181290662"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-green-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-green-700 transition-colors flex items-center gap-1 min-w-[80px]"
+                  className="bg-green-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-1 min-w-[80px]"
                 >
-                  <Phone className="w-3 h-3 flex-shrink-0" />
+                  <img src="/whatsapp.png" alt="WhatsApp" className="w-3 h-3 flex-shrink-0" />
                   <span>WhatsApp</span>
                 </a>
               </div>
@@ -151,15 +151,7 @@ export function PhoneModal({ isOpen, onClose, onNext, phone, phoneError, onPhone
             <span className="text-xs sm:text-sm Arabic-text">متابعة</span>
             <Navigation className="w-4 h-4 flex-shrink-0" />
           </button>
-          <button
-            type="button"
-            onClick={() => window.location.href = 'tel:+96181290662'}
-            className="bg-red-600 text-white text-base font-semibold rounded-xl hover:bg-red-700 transition-all duration-300 flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] sm:min-w-[140px] w-full"
-          >
-            <Phone className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm sm:text-base">Call Now</span>
-            <span className="text-xs sm:text-sm Arabic-text">اتصل الآن</span>
-          </button>
+          
         </div>
       </form>
     </Modal>
@@ -217,14 +209,7 @@ export function LocationModal({ isOpen, onClose, onNext, onBack, locationData, l
               <Navigation className="w-4 h-4 flex-shrink-0" />
             </button>
           </div>
-          <button
-            onClick={() => window.location.href = 'tel:+96181290662'}
-            className="bg-red-600 text-white text-base font-semibold rounded-xl hover:bg-red-700 transition-all duration-300 flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] sm:min-w-[120px] w-full"
-          >
-            <Phone className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm sm:text-base">Call Now</span>
-            <span className="text-xs sm:text-sm Arabic-text">اتصل الآن</span>
-          </button>
+          
         </div>
       </div>
     </Modal>
@@ -304,14 +289,7 @@ export function AdditionalInfoModal({ isOpen, onClose, onSubmit, onBack, notes, 
               )}
             </button>
           </div>
-          <button
-            onClick={() => window.location.href = 'tel:+96181290662'}
-            className="bg-red-600 text-white text-base font-semibold rounded-xl hover:bg-red-700 transition-all duration-300 flex items-center justify-center gap-2 px-4 py-3 min-w-[120px] sm:min-w-[120px] w-full"
-          >
-            <Phone className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm sm:text-base">Call Now</span>
-            <span className="text-xs sm:text-sm Arabic-text">اتصل الآن</span>
-          </button>
+          
         </div>
       </form>
     </Modal>

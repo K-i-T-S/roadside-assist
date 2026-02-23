@@ -239,9 +239,9 @@ export default function Home() {
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 px-6 rounded-xl font-bold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center justify-center gap-3 text-lg shadow-lg"
               aria-label="Contact us on WhatsApp"
             >
-              <span className="text-2xl">💬</span>
+              <img src="/whatsapp.png" alt="WhatsApp" className="w-6 h-6" />
               <span>Contact on WhatsApp | تواصل على واتساب</span>
-              <span className="text-2xl">💬</span>
+              <img src="/whatsapp.png" alt="WhatsApp" className="w-6 h-6" />
             </a>
             
             <a
@@ -539,7 +539,7 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="bg-green-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-green-600 transition-all hover:scale-105 flex items-center gap-2 shadow-lg"
                 >
-                  <span className="text-xl">💬</span>
+                  <img src="/whatsapp.png" alt="WhatsApp" className="w-5 h-5" />
                   <span>WhatsApp | واتساب</span>
                 </a>
               </div>
@@ -612,7 +612,10 @@ export default function Home() {
                   className="block text-green-400 hover:text-green-300 transition-colors font-semibold text-lg"
                   aria-label="Contact us on WhatsApp"
                 >
-                  💬 WhatsApp: +961 81 29 06 62
+                  <div className="flex items-center gap-2">
+                    <img src="/whatsapp.png" alt="WhatsApp" className="w-5 h-5" />
+                    <span>WhatsApp: +961 81 29 06 62</span>
+                  </div>
                 </a>
               </div>
             </div>
