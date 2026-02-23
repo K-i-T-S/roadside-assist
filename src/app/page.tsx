@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase/client'
 import LocationCollector from '@/components/location/LocationCollector'
 import { useLocationCollector } from '@/hooks/useLocationCollector'
 import { PhoneModal, LocationModal, AdditionalInfoModal } from '@/components/modals/RequestModals'
+import PWAInstallPrompt from '@/components/PWAInstallPrompt'
 const serviceOptions: { type: ServiceType; labelEn: string; labelAr: string; labelArabizi: string; icon: React.ReactNode; description: string; tagline: string }[] = [
   { 
     type: 'tow', 
@@ -893,7 +894,7 @@ export default function Home() {
                 >
                   <div className="flex items-center justify-center gap-2">
                     <img src="/whatsapp.png" alt="WhatsApp" className="w-5 h-5" />
-                    <span>WhatsApp: +961 81 29 06 62</span>
+                    <span className="break-words">WhatsApp: +961 81 29 06 62</span>
                   </div>
                 </a>
                 <div className="flex justify-center space-x-4">
@@ -1005,6 +1006,9 @@ export default function Home() {
         onNotesChange={setTempNotes}
         isSubmitting={isSubmitting}
       />
+      
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   )
 }

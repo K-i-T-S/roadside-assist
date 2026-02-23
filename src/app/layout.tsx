@@ -69,8 +69,20 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/kits-logo.png" sizes="any" />
         <link rel="icon" href="/kits-logo.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/kits-logo.png" />
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <link rel="manifest" href="/site.webmanifest" />
+        
+        {/* PWA Meta Tags for iOS */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="KiTS Assist" />
+        <meta name="application-name" content="KiTS Assist" />
+        <meta name="msapplication-TileColor" content="#2563eb" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        
+        {/* Theme and viewport */}
+        <meta name="theme-color" content="#2563eb" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         
         {/* Preconnect to Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
