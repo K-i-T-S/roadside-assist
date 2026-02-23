@@ -35,7 +35,7 @@ export const structuredData = {
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+961 76 62 30 30",
+    "telephone": "+961 81 290 662",
     "contactType": "emergency",
     "availableLanguage": ["English", "Arabic", "French"],
     "hoursAvailable": "24/7"
@@ -81,3 +81,21 @@ export const websiteStructuredData = {
     "url": "https://kitshub.vercel.app"
   }
 }
+
+// Stable stringification function to prevent hydration mismatches
+function stableStringify(obj: any): string {
+  return JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      return Object.keys(value).sort().reduce((sorted: any, k) => {
+        sorted[k] = value[k]
+        return sorted
+      }, {})
+    }
+    return value
+  })
+}
+
+// Stable stringified versions for hydration consistency
+export const structuredDataString = stableStringify(structuredData)
+export const breadcrumbStructuredDataString = stableStringify(breadcrumbStructuredData)
+export const websiteStructuredDataString = stableStringify(websiteStructuredData)
