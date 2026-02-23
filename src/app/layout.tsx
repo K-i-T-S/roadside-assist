@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { structuredDataString, breadcrumbStructuredDataString, websiteStructuredDataString } from './structured-data';
+import StructuredDataScripts from "../components/StructuredDataScripts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,19 +76,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         
-        {/* Structured Data for SEO */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: structuredDataString }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: breadcrumbStructuredDataString }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: websiteStructuredDataString }}
-        />
+        {/* Structured Data for SEO - Client Side Only */}
+        <StructuredDataScripts />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}

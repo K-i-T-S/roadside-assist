@@ -1,4 +1,4 @@
-export type ServiceType = 'tow' | 'battery_jump' | 'flat_tire' | 'fuel_delivery' | 'minor_repair'
+export type ServiceType = 'tow' | 'battery_jump' | 'flat_tire' | 'fuel_delivery' | 'minor_repair' | 'shi_tene'
 export type RequestStatus = 'pending' | 'assigned' | 'completed'
 
 export interface Provider {

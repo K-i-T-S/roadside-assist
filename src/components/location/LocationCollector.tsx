@@ -191,8 +191,8 @@ export default function LocationCollector({ onLocationChange, value, error, disa
       <div>
         <label htmlFor="location-url" className="block text-lg font-bold text-gray-800 mb-3 text-center">
           <span className="text-2xl">📍</span>
-          <span>Location | الموقع | Mawkef</span>
-          <span className="text-2xl">📍</span>
+          <span>Location | الموقع</span>
+          
         </label>
         <div className="relative">
           <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />

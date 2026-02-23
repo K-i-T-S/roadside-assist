@@ -82,7 +82,20 @@ export const websiteStructuredData = {
   }
 }
 
+// Stable stringification function to prevent hydration mismatches
+function stableStringify(obj: any): string {
+  return JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      return Object.keys(value).sort().reduce((sorted: any, k) => {
+        sorted[k] = value[k]
+        return sorted
+      }, {})
+    }
+    return value
+  })
+}
+
 // Stable stringified versions for hydration consistency
-export const structuredDataString = JSON.stringify(structuredData)
-export const breadcrumbStructuredDataString = JSON.stringify(breadcrumbStructuredData)
-export const websiteStructuredDataString = JSON.stringify(websiteStructuredData)
+export const structuredDataString = stableStringify(structuredData)
+export const breadcrumbStructuredDataString = stableStringify(breadcrumbStructuredData)
+export const websiteStructuredDataString = stableStringify(websiteStructuredData)

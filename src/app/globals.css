@@ -40,13 +40,22 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: #ffffff;
   min-height: 100vh;
 }
 
 /* RTL Support */
 [dir="rtl"] {
   text-align: right;
+}
+
+/* Arabic text styling for buttons */
+.Arabic-text {
+  direction: rtl;
+  text-align: right;
+  font-family: var(--font-sans), 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 /* Arabic font for Arabic locale */
@@ -221,10 +230,7 @@ body {
 
 /* Lebanese cultural patterns */
 .pattern-lebanese {
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(0, 166, 81, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(227, 30, 36, 0.1) 0%, transparent 50%);
+  background: #ffffff;
 }
 
 /* Modern typography */
