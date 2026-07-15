@@ -1,47 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { getAdminSession } from '@/lib/auth/session'
-
-const providerSchema = {
-  name: (value: string) => {
-    if (!value || value.trim().length === 0) {
-      return 'Provider name is required'
-    }
-    if (value.length > 100) {
-      return 'Name too long'
-    }
-    return null
-  },
-  phone: (value: string) => {
-    if (!value || value.trim().length === 0) {
-      return 'Phone number is required'
-    }
-    if (!/^\+?[1-9]\d{1,14}$/.test(value.replace(/\s/g, ''))) {
-      return 'Invalid phone number format'
-    }
-    return null
-  },
-  service_types: (value: string[]) => {
-    if (!value || value.length === 0) {
-      return 'At least one service type is required'
-    }
-    const validTypes = ['tow', 'battery_jump', 'flat_tire', 'fuel_delivery', 'minor_repair']
-    const invalidTypes = value.filter(type => !validTypes.includes(type))
-    if (invalidTypes.length > 0) {
-      return 'Invalid service types'
-    }
-    return null
-  },
-  coverage_area: (value: string) => {
-    if (!value || value.trim().length === 0) {
-      return 'Coverage area is required'
-    }
-    if (value.length > 200) {
-      return 'Coverage area too long'
-    }
-    return null
-  }
-}
+import { pickProviderFields, validateProviderInput } from '@/lib/providers/validation'
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -53,29 +13,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const body = await request.json()
     const { id } = await params
     
-    // Validate request body
-    const errors: string[] = []
-    
-    if (body.name !== undefined) {
-      const nameError = providerSchema.name(body.name)
-      if (nameError) errors.push(`name: ${nameError}`)
-    }
-    
-    if (body.phone !== undefined) {
-      const phoneError = providerSchema.phone(body.phone)
-      if (phoneError) errors.push(`phone: ${phoneError}`)
-    }
-    
-    if (body.service_types !== undefined) {
-      const serviceTypesError = providerSchema.service_types(body.service_types)
-      if (serviceTypesError) errors.push(`service_types: ${serviceTypesError}`)
-    }
-    
-    if (body.coverage_area !== undefined) {
-      const coverageAreaError = providerSchema.coverage_area(body.coverage_area)
-      if (coverageAreaError) errors.push(`coverage_area: ${coverageAreaError}`)
-    }
-    
+    // Validate request body (only fields present are checked/updated)
+    const errors = validateProviderInput(body, { partial: true })
+
     if (errors.length > 0) {
       return NextResponse.json(
         { 
@@ -122,7 +62,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { data, error } = await supabase
       .from('providers')
       .update({
-        ...body,
+        ...pickProviderFields(body),
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
@@ -171,9 +111,29 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       )
     }
     
-    // Check for active requests (in a real implementation, you'd check the requests table)
-    // For now, we'll allow deletion but could add this check later
-    
+    // Block deletion while this provider has an assigned-but-not-completed job —
+    // otherwise the requests.provider_id FK's ON DELETE SET NULL would silently
+    // unassign an active request out from under it.
+    const { count: activeRequestCount, error: activeRequestError } = await supabase
+      .from('requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('provider_id', id)
+      .eq('status', 'assigned')
+
+    if (activeRequestError) {
+      return NextResponse.json(
+        { error: 'Failed to check active requests', details: activeRequestError.message },
+        { status: 500 }
+      )
+    }
+
+    if (activeRequestCount && activeRequestCount > 0) {
+      return NextResponse.json(
+        { error: `Cannot delete ${existingProvider.name}: still assigned to ${activeRequestCount} active request(s)` },
+        { status: 409 }
+      )
+    }
+
     const { error } = await supabase
       .from('providers')
       .delete()

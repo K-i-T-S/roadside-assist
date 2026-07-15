@@ -55,6 +55,12 @@ export default function AdminDashboard() {
   }
 
   const updateRequestStatus = async (requestId: string, status: RequestStatus, providerId?: string) => {
+    const current = requests.find(r => r.id === requestId)
+    if (status === 'completed' && current?.status !== 'assigned') {
+      alert('A request must be assigned to a provider before it can be marked complete.')
+      return
+    }
+
     try {
       const updateData: { status: RequestStatus; provider_id?: string } = { status }
       if (providerId) updateData.provider_id = providerId
@@ -259,30 +265,22 @@ export default function AdminDashboard() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <div className="flex items-center gap-2">
                         {request.status === 'pending' && (
-                          <>
-                            <select
-                              onChange={(e) => {
-                                if (e.target.value) {
-                                  updateRequestStatus(request.id, 'assigned', e.target.value)
-                                }
-                              }}
-                              className="text-sm border-gray-400 border rounded px-3 py-2 font-medium bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                              defaultValue=""
-                            >
-                              <option value="" disabled className="text-gray-500">Assign Provider</option>
-                              {providers.filter(p => p.active).map(provider => (
-                                <option key={provider.id} value={provider.id}>
-                                  {provider.name}
-                                </option>
-                              ))}
-                            </select>
-                            <button
-                              onClick={() => updateRequestStatus(request.id, 'completed')}
-                              className="text-green-700 hover:text-green-900 font-semibold text-sm transition-colors"
-                            >
-                              Complete
-                            </button>
-                          </>
+                          <select
+                            onChange={(e) => {
+                              if (e.target.value) {
+                                updateRequestStatus(request.id, 'assigned', e.target.value)
+                              }
+                            }}
+                            className="text-sm border-gray-400 border rounded px-3 py-2 font-medium bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                            defaultValue=""
+                          >
+                            <option value="" disabled className="text-gray-500">Assign Provider</option>
+                            {providers.filter(p => p.active).map(provider => (
+                              <option key={provider.id} value={provider.id}>
+                                {provider.name}
+                              </option>
+                            ))}
+                          </select>
                         )}
                         {request.status === 'assigned' && (
                           <button

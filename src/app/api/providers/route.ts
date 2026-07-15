@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { getAdminSession } from '@/lib/auth/session'
+import { pickProviderFields, validateProviderInput } from '@/lib/providers/validation'
 
 interface Provider {
   id: string
@@ -11,47 +12,6 @@ interface Provider {
   active: boolean
   created_at: string
   updated_at: string
-}
-
-const providerSchema = {
-  name: (value: string) => {
-    if (!value || value.trim().length === 0) {
-      return 'Provider name is required'
-    }
-    if (value.length > 100) {
-      return 'Name too long'
-    }
-    return null
-  },
-  phone: (value: string) => {
-    if (!value || value.trim().length === 0) {
-      return 'Phone number is required'
-    }
-    if (!/^\+?[1-9]\d{1,14}$/.test(value.replace(/\s/g, ''))) {
-      return 'Invalid phone number format'
-    }
-    return null
-  },
-  service_types: (value: string[]) => {
-    if (!value || value.length === 0) {
-      return 'At least one service type is required'
-    }
-    const validTypes = ['tow', 'battery_jump', 'flat_tire', 'fuel_delivery', 'minor_repair']
-    const invalidTypes = value.filter(type => !validTypes.includes(type))
-    if (invalidTypes.length > 0) {
-      return 'Invalid service types'
-    }
-    return null
-  },
-  coverage_area: (value: string) => {
-    if (!value || value.trim().length === 0) {
-      return 'Coverage area is required'
-    }
-    if (value.length > 200) {
-      return 'Coverage area too long'
-    }
-    return null
-  }
 }
 
 export async function GET(request: NextRequest) {
@@ -116,22 +76,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    
+
     // Validate request body
-    const errors: string[] = []
-    
-    const nameError = providerSchema.name(body.name)
-    if (nameError) errors.push(`name: ${nameError}`)
-    
-    const phoneError = providerSchema.phone(body.phone)
-    if (phoneError) errors.push(`phone: ${phoneError}`)
-    
-    const serviceTypesError = providerSchema.service_types(body.service_types)
-    if (serviceTypesError) errors.push(`service_types: ${serviceTypesError}`)
-    
-    const coverageAreaError = providerSchema.coverage_area(body.coverage_area)
-    if (coverageAreaError) errors.push(`coverage_area: ${coverageAreaError}`)
-    
+    const errors = validateProviderInput(body)
+
     if (errors.length > 0) {
       return NextResponse.json(
         { 
@@ -158,9 +106,11 @@ export async function POST(request: NextRequest) {
       )
     }
     
+    const fields = pickProviderFields(body)
+
     const { data, error } = await supabase
       .from('providers')
-      .insert(body)
+      .insert({ ...fields, active: fields.active ?? true })
       .select()
       .single()
     

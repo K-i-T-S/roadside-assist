@@ -170,11 +170,9 @@ export default function ProvidersPage() {
   const handleDelete = async (id: string) => {
     const provider = providers.find(p => p.id === id)
     if (!provider) return
-    
-    const hasActiveRequests = provider.name // In a real app, you'd check for active requests
-    
-    if (!confirm(`Are you sure you want to delete ${provider.name}?${hasActiveRequests ? ' This provider may have active requests.' : ''}`)) return
-    
+
+    if (!confirm(`Are you sure you want to delete ${provider.name}?`)) return
+
     try {
       const response = await fetch(`/api/providers/${id}`, { method: 'DELETE' })
 
