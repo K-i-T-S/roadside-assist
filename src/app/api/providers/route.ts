@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
+import { getAdminSession } from '@/lib/auth/session'
 
 interface Provider {
   id: string
@@ -55,6 +56,11 @@ const providerSchema = {
 
 export async function GET(request: NextRequest) {
   try {
+    const user = await getAdminSession()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const supabase = await createServerClient()
     const { searchParams } = new URL(request.url)
     
@@ -104,6 +110,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await getAdminSession()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const body = await request.json()
     
     // Validate request body

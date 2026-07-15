@@ -94,12 +94,9 @@ export default function ProvidersPage() {
 
   const loadProviders = async () => {
     try {
-      const { data, error } = await supabase
-        .from('providers')
-        .select('*')
-        .order('name')
-
-      if (error) throw error
+      const response = await fetch('/api/providers')
+      if (!response.ok) throw new Error('Failed to load providers')
+      const { providers: data } = await response.json()
       setProviders(data || [])
     } catch (error) {
       console.error('Error loading providers:', error)
@@ -143,22 +140,21 @@ export default function ProvidersPage() {
     setIsSubmitting(true)
     
     try {
-      if (editingProvider) {
-        const { error } = await supabase
-          .from('providers')
-          .update({
-            ...formData,
-            updated_at: new Date().toISOString()
+      const response = editingProvider
+        ? await fetch(`/api/providers/${editingProvider.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
           })
-          .eq('id', editingProvider.id)
-        
-        if (error) throw error
-      } else {
-        const { error } = await supabase
-          .from('providers')
-          .insert(formData)
-        
-        if (error) throw error
+        : await fetch('/api/providers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+          })
+
+      if (!response.ok) {
+        const { error } = await response.json()
+        throw new Error(error || 'Failed to save provider')
       }
 
       resetForm()
@@ -180,13 +176,13 @@ export default function ProvidersPage() {
     if (!confirm(`Are you sure you want to delete ${provider.name}?${hasActiveRequests ? ' This provider may have active requests.' : ''}`)) return
     
     try {
-      const { error } = await supabase
-        .from('providers')
-        .delete()
-        .eq('id', id)
-      
-      if (error) throw error
-      
+      const response = await fetch(`/api/providers/${id}`, { method: 'DELETE' })
+
+      if (!response.ok) {
+        const { error } = await response.json()
+        throw new Error(error || 'Failed to delete provider')
+      }
+
       loadProviders()
     } catch (error: unknown) {
       console.error('Error deleting provider:', error)
@@ -196,13 +192,14 @@ export default function ProvidersPage() {
 
   const toggleProviderStatus = async (provider: Provider) => {
     try {
-      const { error } = await supabase
-        .from('providers')
-        .update({ active: !provider.active })
-        .eq('id', provider.id)
-      
-      if (error) throw error
-      
+      const response = await fetch(`/api/providers/${provider.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active: !provider.active }),
+      })
+
+      if (!response.ok) throw new Error('Failed to update provider status')
+
       loadProviders()
     } catch (error) {
       console.error('Error updating provider status:', error)
