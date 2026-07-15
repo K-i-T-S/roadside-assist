@@ -12,6 +12,10 @@ interface BeforeInstallPromptEvent extends Event {
   }>;
 }
 
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean;
+}
+
 export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
@@ -23,7 +27,7 @@ export default function PWAInstallPrompt() {
     const checkInstalled = () => {
       const isInStandaloneMode = 
         (window.matchMedia('(display-mode: standalone)').matches) || 
-        (window.navigator as any).standalone ||
+        (window.navigator as NavigatorWithStandalone).standalone ||
         document.referrer.includes('android-app://');
       setIsInstalled(isInStandaloneMode);
     };
@@ -40,6 +44,8 @@ export default function PWAInstallPrompt() {
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
+      const dismissed = localStorage.getItem('pwa-install-dismissed');
+      if (dismissed === 'true') return;
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowInstallButton(true);
     };
@@ -78,14 +84,6 @@ export default function PWAInstallPrompt() {
     localStorage.setItem('pwa-install-dismissed', 'true');
   };
 
-  // Don't show if already installed or dismissed
-  useEffect(() => {
-    const dismissed = localStorage.getItem('pwa-install-dismissed');
-    if (dismissed === 'true') {
-      setShowInstallButton(false);
-    }
-  }, []);
-
   if (isInstalled || !showInstallButton) return null;
 
   if (isIOS) {
@@ -97,7 +95,7 @@ export default function PWAInstallPrompt() {
             <div>
               <h3 className="font-semibold text-sm">Install KiTS Assist</h3>
               <p className="text-xs mt-1 opacity-90">
-                Tap the share button and then "Add to Home Screen" to install our app.
+                Tap the share button and then &quot;Add to Home Screen&quot; to install our app.
               </p>
             </div>
           </div>

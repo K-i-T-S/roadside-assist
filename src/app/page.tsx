@@ -299,7 +299,7 @@ export default function Home() {
                 <span className="text-gradient-modern">Request Received!</span>
                 <Star className="w-8 h-8 text-yellow-500" />
               </div>
-              <div className="text-lg text-gray-600 mt-2">We're on our way to help you | راح نكون في طريقنا لمساعدتك</div>
+              <div className="text-lg text-gray-600 mt-2">We&apos;re on our way to help you | راح نكون في طريقنا لمساعدتك</div>
             </h1>
             
             <div className="flex flex-col gap-4">
