@@ -17,12 +17,6 @@ jest.mock('next/navigation', () => ({
   },
 }))
 
-// Mock next-intl
-jest.mock('next-intl', () => ({
-  useTranslations: () => (key) => key,
-  useLocale: () => 'en',
-}))
-
 // Mock geolocation API
 const mockGeolocation = {
   getCurrentPosition: jest.fn(),

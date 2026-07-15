@@ -83,13 +83,16 @@ export const websiteStructuredData = {
 }
 
 // Stable stringification function to prevent hydration mismatches
-function stableStringify(obj: any): string {
+function stableStringify(obj: unknown): string {
   return JSON.stringify(obj, (key, value) => {
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      return Object.keys(value).sort().reduce((sorted: any, k) => {
-        sorted[k] = value[k]
-        return sorted
-      }, {})
+      const record = value as Record<string, unknown>
+      return Object.keys(record)
+        .sort()
+        .reduce((sorted: Record<string, unknown>, k) => {
+          sorted[k] = record[k]
+          return sorted
+        }, {})
     }
     return value
   })

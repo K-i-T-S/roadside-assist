@@ -11,6 +11,7 @@ import LocationCollector from '@/components/location/LocationCollector'
 import { useLocationCollector } from '@/hooks/useLocationCollector'
 import { PhoneModal, LocationModal, AdditionalInfoModal } from '@/components/modals/RequestModals'
 import PWAInstallPrompt from '@/components/PWAInstallPrompt'
+import { validateLebanesePhone, type PhoneValidationReason } from '@/lib/phone'
 const serviceOptions: { type: ServiceType; labelEn: string; labelAr: string; labelArabizi: string; icon: React.ReactNode; description: string; tagline: string }[] = [
   { 
     type: 'tow', 
@@ -68,6 +69,28 @@ const serviceOptions: { type: ServiceType; labelEn: string; labelAr: string; lab
   },
 ]
 
+const PHONE_ERROR_MESSAGES: Record<PhoneValidationReason, string> = {
+  'missing-plus': 'Phone must start with + | يجب أن يبدأ الرقم بـ +',
+  'missing-country-code': 'Enter valid country code | أدخل رمز بلد صالح',
+  'lebanese-digit-count': '8 digits needed after +961 | 8 أرقام مطلوبة بعد +961',
+  'digits-only': 'Digits only after country code | أرقام فقط بعد رمز البلد',
+  'international-digit-count': '6-12 digits for international | 6-12 رقم للدولي',
+}
+
+const formatPhoneInput = (value: string): string => {
+  if (/^\d+$/.test(value.replace(/\s/g, ''))) {
+    const digits = value.replace(/\s/g, '')
+    if (digits.length <= 8) {
+      return `+961 ${digits.slice(0, 2)}${digits.length > 2 ? ' ' : ''}${digits.slice(2, 5)}${digits.length > 5 ? ' ' : ''}${digits.slice(5)}`
+    }
+    return `+${digits}`
+  }
+  if (!value.startsWith('+') && value.length > 0) {
+    return `+${value}`
+  }
+  return value
+}
+
 export const dynamic = 'force-dynamic'
 
 export default function Home() {
@@ -92,111 +115,45 @@ export default function Home() {
     clearLocation
   } = useLocationCollector()
 
-  const validatePhone = (phone: string): { isValid: boolean; formatted?: string; errorKey?: string } => {
-    const cleaned = phone.replace(/\s/g, '')
-    
-    if (!cleaned.startsWith('+')) {
-      return { isValid: false, errorKey: 'invalidFormat' }
+  const validatePhone = (phone: string) => {
+    const result = validateLebanesePhone(phone)
+    if (result.valid) {
+      return { isValid: true as const, formatted: result.formatted }
     }
-    
-    const parts = cleaned.substring(1).split(/(\d{1,4})/).filter(Boolean)
-    if (parts.length < 2) {
-      return { isValid: false, errorKey: 'invalidCountryCode' }
-    }
-    
-    const countryCode = parts[0]
-    const numberPart = parts.slice(1).join('')
-    
-    if (countryCode === '961') {
-      if (numberPart.length !== 8) {
-        return { isValid: false, errorKey: 'lebaneseDigits' }
-      }
-      if (!/^\d{8}$/.test(numberPart)) {
-        return { isValid: false, errorKey: 'digitsOnly' }
-      }
-      const formatted = `+961 ${numberPart.slice(0, 2)} ${numberPart.slice(2, 5)} ${numberPart.slice(5)}`
-      return { isValid: true, formatted }
-    }
-    
-    if (numberPart.length < 6 || numberPart.length > 12) {
-      return { isValid: false, errorKey: 'otherCountry' }
-    }
-    if (!/^\d+$/.test(numberPart)) {
-      return { isValid: false, errorKey: 'digitsOnly' }
-    }
-    
-    return { isValid: true, formatted: cleaned }
+    return { isValid: false as const, errorKey: result.reason }
   }
 
   const handlePhoneChange = (value: string) => {
-    let formattedValue = value
-    
-    if (/^\d+$/.test(value.replace(/\s/g, ''))) {
-      const digits = value.replace(/\s/g, '')
-      if (digits.length <= 8) {
-        formattedValue = `+961 ${digits.slice(0, 2)}${digits.length > 2 ? ' ' : ''}${digits.slice(2, 5)}${digits.length > 5 ? ' ' : ''}${digits.slice(5)}`
-      } else {
-        formattedValue = `+${digits}`
-      }
-    } else if (!value.startsWith('+') && value.length > 0) {
-      formattedValue = `+${value}`
-    }
-    
+    const formattedValue = formatPhoneInput(value)
     setPhone(formattedValue)
-    
+
     if (formattedValue.trim() === '+961' || formattedValue.trim() === '+') {
       setPhoneError(null)
+      return
+    }
+
+    const validation = validatePhone(formattedValue)
+    if (validation.isValid) {
+      setPhoneError(null)
     } else {
-      const validation = validatePhone(formattedValue)
-      if (validation.isValid) {
-        setPhone(formattedValue)
-        setPhoneError(null)
-      } else {
-        const errorMessages = {
-          invalidFormat: 'Phone must start with + | يجب أن يبدأرق الهاتف بـ +',
-          invalidCountryCode: 'Enter valid country code | أدخل رمز بلد صالح',
-          lebaneseDigits: '8 digits needed after +961 | 8 أرقام مطلوبة بعد +961',
-          digitsOnly: 'Digits only after country code | أرقام فقط بعد رمز البلد',
-          otherCountry: '6-12 digits for international | 6-12 رقم للدولي'
-        }
-        setPhoneError(errorMessages[validation.errorKey as keyof typeof errorMessages] || 'Invalid number | رقم غير صالح')
-      }
+      setPhoneError(PHONE_ERROR_MESSAGES[validation.errorKey])
     }
   }
 
   const handleTempPhoneChange = (value: string) => {
-    let formattedValue = value
-    
-    if (/^\d+$/.test(value.replace(/\s/g, ''))) {
-      const digits = value.replace(/\s/g, '')
-      if (digits.length <= 8) {
-        formattedValue = `+961 ${digits.slice(0, 2)}${digits.length > 2 ? ' ' : ''}${digits.slice(2, 5)}${digits.length > 5 ? ' ' : ''}${digits.slice(5)}`
-      } else {
-        formattedValue = `+${digits}`
-      }
-    } else if (!value.startsWith('+') && value.length > 0) {
-      formattedValue = `+${value}`
-    }
-    
+    const formattedValue = formatPhoneInput(value)
     setTempPhone(formattedValue)
-    
+
     if (formattedValue.trim() === '+961' || formattedValue.trim() === '+') {
       setTempPhoneError(null)
+      return
+    }
+
+    const validation = validatePhone(formattedValue)
+    if (validation.isValid) {
+      setTempPhoneError(null)
     } else {
-      const validation = validatePhone(formattedValue)
-      if (validation.isValid) {
-        setTempPhone(formattedValue)
-        setTempPhoneError(null)
-      } else {
-        const errorMessages = {
-          invalidFormat: 'Phone must start with + | يجب أن يبدأرق الهاتف بـ +',
-          invalidCountryCode: 'Enter valid country code | أدخل رمز بلد صالح',
-          lebaneseDigits: '8 digits needed after +961 | 8 أرقام مطلوبة بعد +961',
-          digitsOnly: 'Digits only after country code | أرقام فقط بعد رمز البلد',
-          otherCountry: '6-12 digits for international | 6-12 رقم للدولي'
-        }
-        setTempPhoneError(errorMessages[validation.errorKey as keyof typeof errorMessages] || 'Invalid number | رقم غير صالح')
-      }
+      setTempPhoneError(PHONE_ERROR_MESSAGES[validation.errorKey])
     }
   }
 
@@ -231,7 +188,7 @@ export default function Home() {
   }
 
   const handleModalSubmit = async (notesValue: string) => {
-    await handleSubmit(new Event('submit') as any)
+    await handleSubmit()
   }
 
   React.useEffect(() => {
@@ -249,8 +206,7 @@ export default function Home() {
     }
   }, [error])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setError(null)
     
     if (!selectedService) {
@@ -267,14 +223,7 @@ export default function Home() {
     }
     
     if (!phoneValidation.isValid) {
-      const errorMessages = {
-        invalidFormat: 'Start with + and country code | ابدأ بـ + ورمز البلد',
-        invalidCountryCode: 'Valid country code required | رمز بلد صالح مطلوب',
-        lebaneseDigits: '8 digits for Lebanon | 8 أرقام للبنان',
-        digitsOnly: 'Numbers only after code | أرقام فقط بعد الرمز',
-        otherCountry: '6-12 digits for international | 6-12 رقم للدولي'
-      }
-      setError(errorMessages[phoneValidation.errorKey as keyof typeof errorMessages] || 'Invalid number | رقم غير صالح')
+      setError(PHONE_ERROR_MESSAGES[phoneValidation.errorKey])
       return
     }
     
@@ -350,7 +299,7 @@ export default function Home() {
                 <span className="text-gradient-modern">Request Received!</span>
                 <Star className="w-8 h-8 text-yellow-500" />
               </div>
-              <div className="text-lg text-gray-600 mt-2">We're on our way to help you | راح نكون في طريقنا لمساعدتك</div>
+              <div className="text-lg text-gray-600 mt-2">We&apos;re on our way to help you | راح نكون في طريقنا لمساعدتك</div>
             </h1>
             
             <div className="flex flex-col gap-4">
@@ -625,7 +574,13 @@ export default function Home() {
               </div>
             )}
             
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                void handleSubmit()
+              }}
+              className="space-y-8"
+            >
               {/* Service Selection */}
               <fieldset>
                 <legend className="block text-lg font-bold text-gray-800 mb-6 text-center">
