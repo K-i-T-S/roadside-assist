@@ -880,32 +880,19 @@ export default function Home() {
                   className="btn-modern bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all hover:scale-105 text-center inline-block max-w-xs">
                   Admin Portal | الإدارية
                 </Link>
-                <a 
-                  href="https://kitshub.vercel.app/privacy" 
+                <a
+                  href="/privacy"
                   className="block text-gray-400 hover:text-white transition-colors text-sm"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   <br />
                   <span>Privacy Policy | سياسة الخصوصية</span>
                 </a>
-                <a 
-                  href="https://kitshub.vercel.app/terms" 
+                <a
+                  href="/terms"
                   className="block text-gray-400 hover:text-white transition-colors text-sm"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
-                 
+
                   <span>Terms of Service | شروط الخدمة</span>
-                </a>
-                <a 
-                  href="https://kitshub.vercel.app/security" 
-                  className="block text-gray-400 hover:text-white transition-colors text-sm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  
-                  <span>Security Policy | سياسة الأمان</span>
                 </a>
               </div>
             </div>
@@ -913,18 +900,7 @@ export default function Home() {
 
           <div className="border-t border-gray-800 mt-12 pt-8 text-center">
             <p className="text-gray-300 text-sm font-semibold">
-              🇱🇧 © 2025 KiTS Hub. All rights reserved. | جميع الحقوق محفوظة 🇱🇧
-              <a 
-                href="https://kitshub.vercel.app" 
-                className="text-blue-400 hover:text-blue-300 transition-colors ml-2 font-bold"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                🚀 KiTS Hub
-              </a>
-            </p>
-            <p className="text-gray-400 text-xs mt-2">
-              ⭐ ISO 9001:2015 Certified | GDPR Compliant | 24/7 Service ⭐
+              🇱🇧 © 2026 KiTS Roadside Assistance. All rights reserved. | جميع الحقوق محفوظة 🇱🇧
             </p>
           </div>
         </div>
