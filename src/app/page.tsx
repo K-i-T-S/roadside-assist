@@ -389,7 +389,7 @@ export default function Home() {
               <h3 className="text-blue-800 text-sm font-bold drop-shadow-sm">
                 KiTS Roadside
               </h3>
-              <p className="text-black bold text-xs drop-shadow-sm">
+              <p className="text-black font-bold text-xs drop-shadow-sm">
                 Your Lebanese Hero
               </p>
             </div>
@@ -610,9 +610,9 @@ export default function Home() {
                       <div className="flex flex-col items-center gap-3">
                         <div className="text-blue-500">{service.icon}</div>
                         <div className="text-center">
-                          <div className="text-sm text-blue-600 font-small">{service.labelEn}</div>
+                          <div className="text-sm text-blue-600 font-medium">{service.labelEn}</div>
                           <div className="text-lg font-bold text-gray-900">{service.labelArabizi}</div>
-                          <div className="text-sm text-green-600 font-small">{service.labelAr}</div>
+                          <div className="text-sm text-green-600 font-medium">{service.labelAr}</div>
                         </div>
                         <div className="text-xs text-gray-500 italic text-center mt-2">{service.tagline}</div>
                       </div>
