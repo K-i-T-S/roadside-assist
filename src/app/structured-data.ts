@@ -4,7 +4,7 @@ export const structuredData = {
   "name": "KiTS Roadside Assistance",
   "description": "24/7 roadside assistance service across Lebanon providing towing, battery jump, tire changes, fuel delivery, and minor repairs.",
   "url": "https://roadside.kitshub.vercel.app",
-  "telephone": "+961 76 62 30 30",
+  "telephone": "+961 81 290 662",
   "email": "kits.tech.co@gmail.com",
   "logo": "https://roadside.kitshub.vercel.app/kits-logo.png",
   "image": "https://roadside.kitshub.vercel.app/kits-logo.png",
