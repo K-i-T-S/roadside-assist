@@ -21,5 +21,12 @@ export const getAdminSession = cache(async (): Promise<User | null> => {
     return null
   }
 
+  // A signed-in session alone is not enough: only accounts marked admin in
+  // app_metadata (settable only server-side) get in. RLS enforces the same rule
+  // (migration 005).
+  if (user.app_metadata?.role !== 'admin') {
+    return null
+  }
+
   return user
 })
